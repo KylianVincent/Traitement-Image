@@ -1,7 +1,7 @@
 CFLAGS=-c -g -std=gnu99
 LDFLAGS=-lm
 
-all: essai1 essai2 filtreGaussien
+all: essai1 essai2 filtreGaussien detectionContourGrad
 
 test: testPsnr filtreGaussien
 	./test.sh
@@ -16,6 +16,9 @@ filtreGaussien: filtreGaussien.o pgm.o fft.o
 	gcc $(LDFLAGS) $^ -o $@
 
 testPsnr: testPsnr.o pgm.o
+	gcc $(LDFLAGS) $^ -o $@
+
+detectionContourGrad: detectionContourGrad.o pgm.o 
 	gcc $(LDFLAGS) $^ -o $@
 
 %.o:%.c
