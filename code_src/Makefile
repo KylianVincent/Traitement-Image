@@ -23,3 +23,6 @@ detectionContourGrad: detectionContourGrad.o pgm.o
 
 %.o:%.c
 	gcc $(CFLAGS) $<
+
+clean:
+	rm -f *.o essai1 essai2 filtreGaussien detectionContourGrad testPsnr
