@@ -18,11 +18,14 @@ filtreGaussien: filtreGaussien.o pgm.o fft.o
 testPsnr: testPsnr.o pgm.o
 	gcc $(LDFLAGS) $^ -o $@
 
-detectionContourGrad: detectionContourGrad.o pgm.o 
+detectionContourGrad: detectionContourGrad.o pgm.o
+	gcc $(LDFLAGS) $^ -o $@
+
+detectionContourLapl: detectionContourLapl.o pgm.o fft.o
 	gcc $(LDFLAGS) $^ -o $@
 
 %.o:%.c
 	gcc $(CFLAGS) $<
 
 clean:
-	rm -f *.o essai1 essai2 filtreGaussien detectionContourGrad testPsnr
+	rm -f *.o essai1 essai2 filtreGaussien detectionContourGrad testPsnr detectionContourLapl
