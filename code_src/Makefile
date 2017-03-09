@@ -12,16 +12,16 @@ essai1: essai1.o pgm.o
 essai2: essai2.o pgm.o fft.o
 	gcc $(LDFLAGS) $^ -o $@
 
-filtreGaussien: filtreGaussien.o pgm.o fft.o
+filtreGaussien: filtreGaussien.o pgm.o fft.o img.o
 	gcc $(LDFLAGS) $^ -o $@
 
 testPsnr: testPsnr.o pgm.o
 	gcc $(LDFLAGS) $^ -o $@
 
-detectionContourGrad: detectionContourGrad.o pgm.o
+detectionContourGrad: detectionContourGrad.o pgm.o img.o
 	gcc $(LDFLAGS) $^ -o $@
 
-detectionContourLapl: detectionContourLapl.o pgm.o fft.o
+detectionContourLapl: detectionContourLapl.o pgm.o fft.o img.o
 	gcc $(LDFLAGS) $^ -o $@
 
 %.o:%.c
