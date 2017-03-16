@@ -1,4 +1,4 @@
-CFLAGS=-c -g -std=gnu99
+CFLAGS=-c -g -std=c11
 LDFLAGS=-lm
 
 all: essai1 essai2 filtreGaussien detectionContourGrad
