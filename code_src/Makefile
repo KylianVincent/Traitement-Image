@@ -24,8 +24,11 @@ detectionContourGrad: detectionContourGrad.o pgm.o img.o
 detectionContourLapl: detectionContourLapl.o pgm.o fft.o img.o
 	gcc $^ -o $@ $(LDFLAGS)
 
+diffTimefiltreGaussien: diffTimefiltreGaussien.o pgm.o fft.o img.o
+	gcc $^ -o $@ $(LDFLAGS)
+
 %.o:%.c
 	gcc $(CFLAGS) $<
 
 clean:
-	rm -f *.o essai1 essai2 filtreGaussien detectionContourGrad testPsnr detectionContourLapl
+	rm -f *.o essai1 essai2 filtreGaussien detectionContourGrad testPsnr detectionContourLapl diffTimefiltreGaussien
