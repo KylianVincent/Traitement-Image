@@ -114,6 +114,7 @@
 \usepackage{framed}
 \usepackage{ifthen}
 \usepackage{comment}
+\usepackage{graphicx}
 
 \newcounter{Nbquestion}
 
@@ -174,7 +175,7 @@
 \title{\textbf{TP1 Traitement d'Image\\Convolution : Lissage et détection de contours}}
 \author{
 \begin{tabular}{cc}
-	\textsc{Loiodice Thomas} & \textsc{Kylian Vincent} \\
+	\textsc{Loiodice Thomas} & \textsc{Vincent Kylian} \\
 \end{tabular}}   
 \date{\small \today}
 
@@ -188,7 +189,7 @@
 \usepackage{titling}
 \setlength{\droptitle}{-7em}
 
-\setlength{\parindent}{0cm}
+\setlength{\parindent}{1cm}
 
 \makeatletter
 % patch pour le bug concernant les parenthèses fermantes d'après http://tex.stackexchange.com/q/69472
@@ -211,12 +212,129 @@
 
 \subsection{FFT et filtrage fréquentiel}
 
+
+En étudiant les résultats obtenus sur les différents types de bruit nous avons vu que ce filtrage est plus adapté à certains types de bruit que d'autres. En effet XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.
+L'estimation d'un résultat visuel est parfois compliqué, en effet le "meilleur" lissage est difficile à choisir : plus le lissage est fort plus les couleurs sont constantes et proches des images d'origine mais plus les contours deviennent épais et flous. Ainsi dans nos estimations visuelles nous avions souvent choisi un $\sigma$ plus faible que celui maximisant le PSNR.\\
+
+
+Exemple pour l'image \textit{figure2bb50.pgm} :\\
+
+\noindent
+\begin{minipage}[c]{0.20\linewidth}
+	\begin{center}
+		\includegraphics[width = 33mm]{./img/formes2bb50.jpg}
+		\textit{origine}
+	\end{center}
+\end{minipage}
+\begin{minipage}[c]{0.20\linewidth}
+	\begin{center}
+		\includegraphics[width = 33mm]{./img/2bb50-1.jpg}
+		\textit{$\sigma = 1$}
+	\end{center}
+\end{minipage}
+\begin{minipage}[c]{0.20\linewidth}
+	\begin{center}
+		\includegraphics[width = 33mm]{./img/2bb50-2.jpg}
+		\textit{$\sigma = 2$}
+	\end{center}
+\end{minipage}
+\begin{minipage}[c]{0.20\linewidth}
+	\begin{center}
+		\includegraphics[width = 33mm]{./img/2bb50-3.jpg}
+		\textit{$\sigma = 3$}
+	\end{center}
+\end{minipage}
+\begin{minipage}[c]{0.20\linewidth}
+	\begin{center}
+		\includegraphics[width = 33mm]{./img/2bb50-4.jpg}
+		\textit{$\sigma = 4$}
+	\end{center}
+\end{minipage}
+
+\subsubsection*{Bruit gaussien}
+Ce bruit, caractérisé par un flou et l'addition d'un bruit blanc nous a semblé être le plus réceptif au lissage. 
+\subsubsection*{Bruit speckle}
+
+\subsubsection*{Bruit poivre et sel}
+Le bruit poivre et sel est celui qui résiste le plus à notre filtrage. Étant constitué de points de forte disparité (blancs et noirs, aux extrêmes de l'échelle de couleur) face aux pixels de l'image, ceux-ci ne sont lissés dans l'image qu'au prix d'un fort flou sur les contours.
+
 \subsection{Convolution spatiale}
+
+Nous avons tout d'abord observé que plus sigma est choisi grand, plus la taille de la fenêtre doit être importante pour observer les mêmes résultats qu'avec un filtrage fréquentiel. En effet, plus la valeur du lissage $\sigma$ est grande, plus la gaussienne va être étalée et sa décroissance lente. Ainsi afin de prendre en compte tous les coefficients non nuls du filtre gaussien, il sera nécessaire de prendre en compte des pixels plus éloignés du pixel calculé, et donc d'élargir la fenêtre W.\\
+
+Cet effet est notamment visible sur le traitement ci-dessous de l'image \textit{formes1pets5.pgm} avec $\sigma = 5$ :\\
+
+\noindent
+\begin{minipage}[c]{0.50\linewidth}
+	\begin{center}
+		\includegraphics[width = 70mm]{./img/2sp5.jpg}\\
+		\textit{Image bruitée}\\
+		\textit{$PSNR_{formes1}=10.58$}
+	\end{center}
+\end{minipage}
+\begin{minipage}[c]{0.50\linewidth}
+	\begin{center}
+		\includegraphics[width = 70mm]{./img/2sp5-5-5}\\
+		\textit{$\sigma=5$ et W=5}\\
+		\textit{$PSNR_{formes1}=10.93$}
+	\end{center}
+\end{minipage}\\
+\\
+
+Sur la figure de droite où l'on a choisi une fenêtre de taille 5, l'image est clairement assombrie, les contributions des pixels éloignés mais n'étant pas annulés par la gaussienne ne sont en effet pas prises en compte. En choisissant une fenêtre plus importante ($W = 20$), on obtient un résultat équivalent au résultat obtenu par FFT :\\
+
+\noindent
+\begin{minipage}[c]{0.50\linewidth}
+	\begin{center}
+		\includegraphics[width = 70mm]{./img/2sp5-5-20.jpg}\\
+		\textit{$\sigma=5$ et W=20}\\
+		\textit{$PSNR_{formes1}=25.91$}
+	\end{center}
+\end{minipage}
+\begin{minipage}[c]{0.50\linewidth}
+	\begin{center}
+		\includegraphics[width = 70mm]{./img/2sp5-5.jpg}\\
+		\textit{Avec FFT, $\sigma=5$}\\
+		\textit{$PSNR_{formes1}=25.91$}
+	\end{center}
+\end{minipage}\\
+\\
+
+Ainsi, nous avons étudié sur des exemples l'écart entre le résultat obtenu par un filtrage fréquentiel et celui obtenu par un filtrage spatial en fonction de la taille de fenêtre utilisée. Nous avons choisi pour celà les images bruitées \textit{formes1pest5.pgm}, \textit{formes2sp5.pgm} \textit{formes2bb67.pgm} afin d'expérimenter les variations sur des images de contrastes et bruits différents.
+
+Nous avons choisi des images présentant un niveau de bruit assez élevé pour permettre une bonne visualisation du filtrage.
+
+\begin{center}
+	\includegraphics[width = 170mm]{./img/1pets5sce.jpg}\\
+	\textit{Comparaison sur l'image formes1pets5.pgm}
+\end{center}
+\vspace{1cm}
+
+\begin{center}
+	\includegraphics[width = 170mm]{./img/2sp5sce.jpg}\\
+	\textit{Comparaison sur l'image formes2sp5.pgm}
+\end{center}
+\vspace{1cm}
+
+\begin{center}
+	\includegraphics[width = 170mm]{./img/2bb67sce.jpg}\\
+	\textit{Comparaison sur l'image formes2bb67.pgm}
+\end{center}
+
+\noindent
+Ainsi on peut voir que :
+\begin{itemize}
+	\item Il n'est pas nécessaire d'avoir un masque d'une largeur très importante, en effet dès une taille de 40 pour les quatre valeurs de $\sigma$ testées, le résultat est identique à celui obtenu par FFT.
+	\item On peut déduire de ces expérimentations une loi empirique reliant $\sigma$ et $W$ :\\
+	\begin{center}
+		\fbox{$W(\sigma) \geq 3 \sigma$}
+	\end{center}
+\end{itemize}
 
 \subsection{Complexité et comparaison des 2 méthodes}
 
 
-
+% Fin section 1 %
 \section{Partie II : Détection de contours}
 
 \subsection{Opérateurs différentiels du premier ordre}
@@ -225,6 +343,8 @@
 
 \subsection{Comparaison}
 
+
+% Fin section 2 %
 \end{document}
 
 % Fin du document LaTeX

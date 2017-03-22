@@ -1,19 +1,9 @@
-#/bin/sh
+#!/bin/bash
 
 IMAGES_PATH=../imagestp
 
-for f in $(find "$IMAGES_PATH" -type f -name "formes1*.pgm" ); do
-    ./filtreGaussien "$f" test.pgm 0.5 10
-    echo "PSNR pour $f :"
-    ./testPsnr ../imagestp/formes1.pgm test.pgm
-    echo ""
-    echo ""
-done;
-
-for f in $(find "$IMAGES_PATH" -type f -name "formes2*.pgm" ); do
-    ./filtreGaussien "$f" test.pgm 0.5 10
-    echo "PSNR pour $f :"
-    ./testPsnr ../imagestp/formes2.pgm test.pgm
-    echo ""
-    echo ""
-done;
+./filtreGaussien "$IMAGES_PATH/formes$1.pgm" "../rapport/img/$1.pgm" $2 $3
+##eog "../rapport/img/$1.pgm" &
+##echo "PSNR pour $IMAGES_PATH/formes$1.pgm  (sigma=$2, W=$3):"
+./testPsnr "../imagestp/formes2.pgm" "../rapport/img/$1.pgm"
+echo ""
