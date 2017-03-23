@@ -464,33 +464,24 @@ Sur la figure suivant on voit que la méthode est fonctionnel.\\
 Ici on a utilisé la seconde formes qui et l'image moins contraster de la première forme. En choisissant un seuil pas trop grand on obtient bien le même le résultat 
 que avec la première forme.
 On peux donc estimer que la variation de contraste n'est pas un probleme pour la détection de contour.\\
-En revanche c'est désagréable d'avoir à ajuster le seuil on peux envisager de choisir une valeur qui s'adapterais au contraste de l'image.\\
-
-bruits poivre et sel -> galère
+En revanche c'est désagréable d'avoir à ajuster le seuil on peux envisager de choisir une valeur qui s'adapterais au contraste de l'image.
+Pour la suite des tests on prendra la moyen de toute les valeur des pixel de l'image comme valeur seuil.\\
+Testons notre détécteur de contour sur les différentes formes de bruit :\\
+	
 \noindent
 \begin{center}
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
 		\includegraphics[width = 33mm]{./img/p2test_grad_mean_formes2pets5.jpg}
-		\textit{origine}
+		\textit{bruits poivre et sel}
 	\end{center}
 \end{minipage}
-\end{center}
-
-bruit spéculum -> les contour détécter fome de grosse tache.
-\noindent
-\begin{center}
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
 		\includegraphics[width = 33mm]{./img/p2test_grad_mean_formes1sp.jpg}
-		\textit{origine}
+		\textit{bruit Spéculum}
 	\end{center}
 \end{minipage}
-\end{center}
-
-bruit gaussien -> graduelement difficile : bon jusqu'a 30
-\noindent
-\begin{center}
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
 		\includegraphics[width = 33mm]{./img/p2test_grad_mean_formes2bb10.jpg}
@@ -498,12 +489,15 @@ bruit gaussien -> graduelement difficile : bon jusqu'a 30
 	\end{center}
 \end{minipage}
 \end{center}
-fonctionnement ...
+
+Avec les bruits poivre et sel on ne réussi pas à détecter de contour cohérent.\\
+Avec les bruits spéculum, les contours détécté foment de grosse tâche(il sera difficil de connaitre la position du contour).\\
+Avec les bruits gaussiens la difficulté de détection augmente graduelement avec la valeur de bruitage : on obtient un résultat intressant jusqu'a une valeur de 30.\\
 
 \subsubsection{On peux fixer le seuil relativement à l'image}
 A part certain cas extreme (voire ci-dessous) Choisire une valeur de seuil se rapportant à la moyenne
 et un bon compromis. Cela évite à l'utilisateur de rechercher un seuil valable.
-Bien sur on peux toujours améliorer le résultat en ajustant le seuil plus finement.\\
+Mais on peux toujours améliorer le résultat en ajustant le seuil plus finement.\\
 \noindent
 \begin{center}
 \begin{minipage}[c]{0.20\linewidth}
