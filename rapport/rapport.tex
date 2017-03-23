@@ -349,33 +349,32 @@ Cet effet est notamment visible sur le traitement ci-dessous de l'image \textit{
 \noindent
 \begin{minipage}[c]{0.50\linewidth}
 	\begin{center}
-		\includegraphics[width = 70mm]{./img/2sp5.jpg}\\
+		\includegraphics[width = 65mm]{./img/2sp5.jpg}\\
 		\textit{Image bruitée}\\
 		\textit{$PSNR_{formes1}=10.58$}
 	\end{center}
 \end{minipage}
 \begin{minipage}[c]{0.50\linewidth}
 	\begin{center}
-		\includegraphics[width = 70mm]{./img/2sp5-5-5}\\
+		\includegraphics[width = 65mm]{./img/2sp5-5-5}\\
 		\textit{$\sigma=5$ et W=5}\\
 		\textit{$PSNR_{formes1}=10.93$}
 	\end{center}
 \end{minipage}\\
 \\
-
 Sur la figure de droite où l'on a choisi une fenêtre de taille 5, l'image est clairement assombrie, les contributions des pixels éloignés mais n'étant pas annulés par la gaussienne ne sont en effet pas prises en compte. En choisissant une fenêtre plus importante ($W = 20$), on obtient un résultat équivalent au résultat obtenu par FFT :\\
 
 \noindent
 \begin{minipage}[c]{0.50\linewidth}
 	\begin{center}
-		\includegraphics[width = 70mm]{./img/2sp5-5-20.jpg}\\
+		\includegraphics[width = 65mm]{./img/2sp5-5-20.jpg}\\
 		\textit{$\sigma=5$ et W=20}\\
 		\textit{$PSNR_{formes1}=25.91$}
 	\end{center}
 \end{minipage}
 \begin{minipage}[c]{0.50\linewidth}
 	\begin{center}
-		\includegraphics[width = 70mm]{./img/2sp5-5.jpg}\\
+		\includegraphics[width = 65mm]{./img/2sp5-5.jpg}\\
 		\textit{Avec FFT, $\sigma=5$}\\
 		\textit{$PSNR_{formes1}=25.91$}
 	\end{center}
@@ -425,6 +424,7 @@ Nous avons ainsi comparé les temps relatifs entre l'implémentation fréquentie
 E_{f/s}=100\frac{T_{freq}-T_{spat}}{T_{freq}}
 \end{equation}
 
+\vspace {2em}
 La figure obtenue, moyennée sur 5 mesures, est la suivante :
 \begin{center}
 	\includegraphics[width = 170mm]{./img/timeDiff.jpg}
@@ -697,7 +697,7 @@ L'image du laplacien obtenue par cette méthode doit ensuite être traitée pour
 	\item En regardant la \textit{Figure 5} du sujet on voit que le laplacien est très proche de zéro en l'absence de contours (pas ou peu de variations d'intensité, et donc très faible valeur au second ordre) et ces changements de signes sont donc susceptibles d'arriver dans ces zones. Il a donc été nécessaire de ne détecter que les changements de signe entre des valeurs espacées d'une certaine amplitude. Nous avons fixé empiriquement ce seuil à 1.\\
 \end{itemize}
 
-On remarque tout d'abord que sur des images simples et sans bruit telles que les images \textit{formesX.pgm} le filtre offre une très bonne détection (résultat identique sur les deux contrastes) avec une valeur de $\sigma$ adaptée :\\
+On remarque tout d'abord que sur des images simples et sans bruit telles que les images \textit{formes1/2.pgm} le filtre offre une très bonne détection (résultat identique sur les deux contrastes) avec une valeur de $\sigma$ adaptée :\\
 
 \noindent
 \begin{center}
@@ -762,7 +762,7 @@ Sur cette image sans bruit il est possible d'arriver à une très bonne détecti
 \begin{center}
 	\begin{minipage}[c]{0.49\linewidth}
 		\begin{center}
-			\includegraphics[width = 80mm]{./img/globules.jpg}\\
+			\includegraphics[width = 80mm]{./img/globulesbb26.jpg}\\
 			\textit{origine}\\
 		\end{center}
 	\end{minipage}
@@ -785,7 +785,7 @@ Sur cette image sans bruit il est possible d'arriver à une très bonne détecti
 	\begin{minipage}[c]{0.49\linewidth}
 		\begin{center}
 			\includegraphics[width = 80mm]{./img/globulesbb26fg-2-ctr-1.jpg}\\
-			\textit{détection laplacien avec filtrage précédent : $\sigma = 1$}\\
+			\textit{détection laplacien ($\sigma = 1$) avec filtrage précédent ($\sigma = 2$): }\\
 		\end{center}
 	\end{minipage}
 \end{center}
@@ -835,6 +835,47 @@ s			\includegraphics[width = 50mm]{./img/ctraquitain-1.jpg}
 
 
 \subsection{Comparaison}
+Comme nous l'avons vu dans les parties précédentes on peut extraire des caractéristiques propres aux deux méthodes :
+\begin{itemize}
+	\item La détection par laplacien est bien plus sensible au bruit que la détection par gradient
+	\item Les images bruitées nécessitent invariablement un traitement de dé-bruitage avec un filtre de détection de contours sous peine de fausse cette détection.
+	\item Du fait de son fonctionnement par détection des passages par zéro avec un certain seuil, le laplacien permet d'obtenir des contours souvent plus fins que ceux obtenus par une méthode du gradient
+	\item Cela le rend cependant bien moins réceptif au pré-filtrage par filtre gaussien qui permet une réduction du bruit au prix d'un élargissement des contours. Cela conduit à un grossissement des contours pour la détection par gradient mais à une forte difficulté de détection par laplacien (étalement et donc seuillage difficile pour la détection du passage par zéro)\\
+\end{itemize}
+
+Nous pouvons voir l'épaisseur des contours détectés sur l'exemple de l'image \textit{couchersoleil.pgm} :
+
+\begin{center}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/p2test_grad_mean_soleil.jpg}\\
+			\textit{détection par gradient}\\
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/ctrcouchersoleil-1_5.jpg}\\
+			\textit{détection par laplacien}\\
+		\end{center}
+	\end{minipage}
+\end{center}
+
+\vspace{2em}
+Enfin la détection en présence de bruit (avec filtrage préalable) est mieux gérée par l'opérateur de gradient, nous pouvons comparer cela sur l'image : \textit{globulesbb26.pgm} :
+\begin{center}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/globulesbb26_filtrer3.jpg}\\
+			\textit{détection par gradient}\\
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/globulesbb26fg-2-ctr-1.jpg}\\
+			\textit{détection par laplacien}\\
+		\end{center}
+	\end{minipage}
+\end{center}
 
 
 % Fin section 2 %
