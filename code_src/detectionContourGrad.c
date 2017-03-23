@@ -48,7 +48,7 @@ double** threshold(double threshold,double** sortie, double** entree, int nl, in
 }
 
 bool isLocalMin(double** entree, int i, int j) {
-	double threshold =25.0;
+	double threshold =1.0;
 	return	entree[i][j] > entree[i-1][j]+threshold && entree[i][j] > entree[i+1][j]+threshold 
 		|| 	entree[i][j] > entree[i][j-1]+threshold && entree[i][j] > entree[i][j+1]+threshold 
 		|| 	entree[i][j] > entree[i-1][j+1]+threshold && entree[i][j] > entree[i+1][j-1]+threshold 
@@ -87,9 +87,9 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
 	im4 = imuchar2double(im1,nl,nc);
 	/* Calcul des contours */
   im5=detection(NULL,im4,nl,nc);
-  //im4=threshold(mean(im5,nl,nc),NULL,im5,nl,nc);
+  im4=threshold(mean(im5,nl,nc),NULL,im5,nl,nc);
   //im4=threshold(20.0,NULL,im5,nl,nc);
-  im4=onlyLocalMin(NULL,im5,nl,nc);
+  //im4=onlyLocalMin(NULL,im5,nl,nc);
 
 	/* transfomation en char -> sauvgade*/ 
 	im2=imdouble2uchar(im4,nl,nc);
