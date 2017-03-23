@@ -27,9 +27,9 @@
 \setlength{\headwidth}{\textwidth}
 \textheight 24 cm
 \pagestyle{fancy}
-\lhead[\fancyplain{}{\thepage}]{\fancyplain{}{\sl ENSIMAG 1A}}
-\chead[\fancyplain{}{{\sl }}]{\fancyplain{}{{TP Méthodes Numériques}}}
-\rhead[\fancyplain{}{}]{\fancyplain{}{Polisano \& Jedouaa}}
+\lhead[\fancyplain{}{\thepage}]{\fancyplain{}{\sl ENSIMAG 2A}}
+\chead[\fancyplain{}{{\sl }}]{\fancyplain{}{{TP Traitement d'Image}}}
+\rhead[\fancyplain{}{}]{\fancyplain{}{Loiodice \& Vincent}}
 \lfoot{\fancyplain{}{}}
 \cfoot{\fancyplain{}{}}
 \cfoot{\thepage }
@@ -213,7 +213,8 @@
 \subsection{FFT et filtrage fréquentiel}
 
 
-En étudiant les résultats obtenus sur les différents types de bruit nous avons vu que ce filtrage est plus adapté à certains types de bruit que d'autres. En effet XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.
+En étudiant les résultats obtenus sur les différents types de bruit nous avons vu que ce filtrage est plus adapté à certains types de bruit que d'autres. En effet le filtre semble être efficace sur les bruits gaussien et speckle mais semble moins adapté au bruit poivre et sel.\\
+
 L'estimation d'un résultat visuel est parfois compliqué, en effet le "meilleur" lissage est difficile à choisir : plus le lissage est fort plus les couleurs sont constantes et proches des images d'origine mais plus les contours deviennent épais et flous. Ainsi dans nos estimations visuelles nous avions souvent choisi un $\sigma$ plus faible que celui maximisant le PSNR.\\
 
 
@@ -251,16 +252,97 @@ Exemple pour l'image \textit{figure2bb50.pgm} :\\
 	\end{center}
 \end{minipage}
 
+
 \subsubsection*{Bruit gaussien}
-Ce bruit, caractérisé par un flou et l'addition d'un bruit blanc nous a semblé être le plus réceptif au lissage. 
+Ce bruit, caractérisé par un flou et l'addition d'un bruit blanc, nous a semblé être le plus réceptif au lissage. Avec l'image \textit{formes2bb40.pgm} on obtient les résultats suivants :
+\begin{center}
+\begin{minipage}[c]{0.30\linewidth}
+	\begin{center}
+		\includegraphics[width = 50mm]{./img/2bb40.jpg}
+		\textit{origine}\\
+		\textit{PSNR = 16.36}
+	\end{center}
+\end{minipage}
+\begin{minipage}[c]{0.30\linewidth}
+	\begin{center}
+		\includegraphics[width = 50mm]{./img/2bb40-1.jpg}
+		\textit{$\sigma = 1$}\\
+		\textit{PSNR = 26.86}
+	\end{center}
+\end{minipage}
+\begin{minipage}[c]{0.30\linewidth}
+	\begin{center}
+		\includegraphics[width = 50mm]{./img/2bb40-2_5.jpg}
+		\textit{$\sigma = 2.5$}\\
+		\textit{PSNR = 30.29}
+	\end{center}
+\end{minipage}
+\end{center}
+
+Le résultat obtenu permet d'obtenir un bon PSNR dès $\sigma=1$, cette valeur nous a semblé un bon compromis entre le lissage et l'apparition de flou, cependant le PSNR maximal peut être obtenu pour $\sigma=2.5$.
+
+
 \subsubsection*{Bruit speckle}
+Le bruit speckle semble
+Nous avons pris une image qui nous a semblé proche qualitativement et quantitativement niveau bruit de l'image testée en section précédente (\textit{formes2bb40.pgm}) pour le buit speckle : l'image \textit{formes2sp1.pgm}.
+\begin{center}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/2sp1.jpg}
+			\textit{origine}\\
+			\textit{PSNR = 16.77}
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/2sp1-1.jpg}
+			\textit{$\sigma = 1$}\\
+			\textit{PSNR = 27.23}
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/2sp1-2_4.jpg}
+			\textit{$\sigma = 2.4$}\\
+			\textit{PSNR = 30.52}
+		\end{center}
+	\end{minipage}\\
+\end{center}
+
+Ici le meilleur résultat est obtenu pour $\sigma=2.4$ et les résultats obtenus sont très proches de ceux pour un bruit gaussien.
+
 
 \subsubsection*{Bruit poivre et sel}
-Le bruit poivre et sel est celui qui résiste le plus à notre filtrage. Étant constitué de points de forte disparité (blancs et noirs, aux extrêmes de l'échelle de couleur) face aux pixels de l'image, ceux-ci ne sont lissés dans l'image qu'au prix d'un fort flou sur les contours.
+Le bruit poivre et sel est celui qui résiste le plus à notre filtrage. Étant constitué de points de forte disparité (blancs et noirs, aux extrêmes de l'échelle de couleur) face aux pixels de l'image, ceux-ci ne sont lissés dans l'image qu'au prix d'un fort flou sur les contours. Pour illustrer cela nous avons choisi l'image \textit{formes1pets5.pgm}.
+\begin{center}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/1pets5.jpg}
+			\textit{origine}\\
+			\textit{PSNR = 11.06}
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/1pets5-1.jpg}
+			\textit{$\sigma = 1$}\\
+			\textit{PSNR = 18.94}
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/1pets5-2_4.jpg}
+			\textit{$\sigma = 2.4$}\\
+			\textit{PSNR = 20.49}
+		\end{center}
+	\end{minipage}
+\end{center}
+
+L'image est ici, d'origine, bien plus bruitée que les images utilisées précédemment dans les tests mais cela montre la persistance des points de bruits poivre et sel face au filtrage.
 
 \subsection{Convolution spatiale}
 
-Nous avons tout d'abord observé que plus sigma est choisi grand, plus la taille de la fenêtre doit être importante pour observer les mêmes résultats qu'avec un filtrage fréquentiel. En effet, plus la valeur du lissage $\sigma$ est grande, plus la gaussienne va être étalée et sa décroissance lente. Ainsi afin de prendre en compte tous les coefficients non nuls du filtre gaussien, il sera nécessaire de prendre en compte des pixels plus éloignés du pixel calculé, et donc d'élargir la fenêtre W.\\
+Nous avons tout d'abord observé que plus le sigma est choisi grand, plus la taille de la fenêtre doit être importante pour observer les mêmes résultats qu'avec un filtrage fréquentiel. En effet, plus la valeur du lissage $\sigma$ est grande, plus la gaussienne va être étalée et sa décroissance lente. Ainsi afin de prendre en compte tous les coefficients non nuls du filtre gaussien, il sera nécessaire de prendre en compte des pixels plus éloignés du pixel calculé, et donc d'élargir la fenêtre W.\\
 
 Cet effet est notamment visible sur le traitement ci-dessous de l'image \textit{formes1pets5.pgm} avec $\sigma = 5$ :\\
 
@@ -300,7 +382,7 @@ Sur la figure de droite où l'on a choisi une fenêtre de taille 5, l'image est 
 \end{minipage}\\
 \\
 
-Ainsi, nous avons étudié sur des exemples l'écart entre le résultat obtenu par un filtrage fréquentiel et celui obtenu par un filtrage spatial en fonction de la taille de fenêtre utilisée. Nous avons choisi pour celà les images bruitées \textit{formes1pest5.pgm}, \textit{formes2sp5.pgm} \textit{formes2bb67.pgm} afin d'expérimenter les variations sur des images de contrastes et bruits différents.
+Ainsi, nous avons étudié sur des exemples l'écart absolu entre le résultat obtenu par un filtrage fréquentiel et celui obtenu par un filtrage spatial en fonction de la taille de fenêtre utilisée. Nous avons choisi pour celà les images bruitées \textit{formes1pest5.pgm}, \textit{formes2sp5.pgm} \textit{formes2bb67.pgm} afin d'expérimenter les variations sur des images de contrastes et bruits différents.
 
 Nous avons choisi des images présentant un niveau de bruit assez élevé pour permettre une bonne visualisation du filtrage.
 
@@ -331,7 +413,33 @@ Ainsi on peut voir que :
 	\end{center}
 \end{itemize}
 
+\vspace{1em}
+On peut remarquer que pour $\sigma=0.5$, et plus généralement $\sigma < 1$, on obtient un écart qui ne tend pas vers $0$ et reste à une valeur fixe, ceci est le même phénomène pour toutes les images. Nous ne parvenons pas à expliquer cet écart non présent pour les autres valeurs.
+
 \subsection{Complexité et comparaison des 2 méthodes}
+Pour la comparaison du temps de calcul nous avons utilisé l'image \textit{formes2bb50.pgm} avec les résultats précédents, soit une taille de masque telle que $W=3\sigma$.
+
+Nous avons ainsi comparé les temps relatifs entre l'implémentation fréquentielle (en prenant en compte le surcoût de passage par la FFT, le shift et les opérations inverses) et celle spatiale (implémentée par un filtre séparable). L'écart relatif a été calculé ainsi :\\
+
+\begin{equation}
+E_{f/s}=100\frac{T_{freq}-T_{spat}}{T_{freq}}
+\end{equation}
+
+La figure obtenue, moyennée sur 5 mesures, est la suivante :
+\begin{center}
+	\includegraphics[width = 170mm]{./img/timeDiff.jpg}
+\end{center}
+
+On voit sur cette figure que pour de petites valeurs de $\sigma$, et donc une faible variance de gaussienne, le filtrage spatial est plus intéressant que le filtrage fréquentiel. En effet pour ces faibles tailles la taille du masque à utiliser est aussi petite, ce qui implique un nombre de calculs moindre (Le filtrage spatial est alors jusqu'à 20\% plus rapide).
+
+Cette tendance s'inverse pour les valeurs de $\sigma$ importantes, c'est ici l'effet inverse qui se produit, le masque doit, pour ces valeurs, prendre une taille importante qui alourdit les calculs (jusqu'à 50\% plus lent que le filtrage fréquentiel pour $\sigma=10$).\\
+
+\noindent
+L'équivalence entre les deux méthodes se trouve à une taille proche de $\sigma = 2.5$. Ainsi :
+\begin{itemize}
+	\item Pour une taille $\sigma < 0.5$ c'est le filtrage \textit{spatial} qui est à privilégier
+	\item A l'inverse, pour $\sigma \geq 0.5$ le filtrage \textit{fréquentiel} est celui qui minimise le temps de calcul
+\end{itemize}
 
 
 % Fin section 1 %
@@ -586,6 +694,151 @@ $\longrightarrow$
 
 
 \subsection{Opérateurs différentiels du deuxième ordre}
+Pour l'implémentation de la détection de contours par opérateurs du second ordre nous avons choisi d'implémenter le filtre passe-bande LoG par FFT. Nous n'avons pas utilisé un filtre idéalisé mais un filtre sous la forme $\mathcal{F}(\Delta G_{\sigma})$, où le paramètre $\sigma$ peut être choisi.\\
+
+
+L'image du laplacien obtenue par cette méthode doit ensuite être traitée pour détecter les passages par zéro. Pour cela nous avons remarqué plusieurs choses lors de notre implémentation :
+\begin{itemize}
+	\item Il n'est pas possible de chercher les zéros de l'image, en effet les valeurs étant discrétisées et les calculs n'étant pas exacts il est très peu probable de trouver le passage par zéro de cette manière. Il est donc nécessaire de détecter un \textit{changement de signe} du laplacien.
+	\item En regardant la \textit{Figure 5} du sujet on voit que le laplacien est très proche de zéro en l'absence de contours (pas ou peu de variations d'intensité, et donc très faible valeur au second ordre) et ces changements de signes sont donc susceptibles d'arriver dans ces zones. Il a donc été nécessaire de ne détecter que les changements de signe entre des valeurs espacées d'une certaine amplitude. Nous avons fixé empiriquement ce seuil à 1.\\
+\end{itemize}
+
+On remarque tout d'abord que sur des images simples et sans bruit telles que les images \textit{formesX.pgm} le filtre offre une très bonne détection (résultat identique sur les deux contrastes) avec une valeur de $\sigma$ adaptée :\\
+
+\noindent
+\begin{center}
+	\begin{minipage}[c]{0.24\linewidth}
+		\begin{center}
+			\includegraphics[width = 40mm]{./img/1.jpg}
+			\textit{origine}
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.24\linewidth}
+		\begin{center}
+			\includegraphics[width = 40mm]{./img/ctrformes1-0_5.jpg}
+			\textit{$\sigma = 0.5$}\
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.24\linewidth}
+		\begin{center}
+			\includegraphics[width = 40mm]{./img/ctrformes1-1.jpg}
+			\textit{$\sigma = 1$}
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.24\linewidth}
+		\begin{center}
+			\includegraphics[width = 40mm]{./img/ctrformes1-2_5.jpg}
+			\textit{$\sigma = 2_.5$}
+		\end{center}
+	\end{minipage}\\
+\end{center}
+
+Ainsi :
+\begin{itemize}
+	\item Pour une valeur de $\sigma$ trop faible les contours détectées sont trop gros et des doubles détections espacées apparaissent.
+	\item Pour une valeur trop élevée au contraire des bouts de contours disparaissent et des défauts apparaissent (visibles au niveau des angles droits du rectangle notamment) jusqu'à qu'aucun contour ne soit plus détecté.\\
+\end{itemize}
+
+
+L'addition de bruit, comme prédit avec la \textit{Figure 4} du sujet rend la méthode très instable, du fait de l'utilisation d'opérateurs du second ordre. L'utilisation du filtre gaussien en amont de la détection, comme présenté pour la détection par gradient ne permet pas ici de grande amélioration.
+
+En effet même si le bruit est atténué, l'étalement des contours oblige à choisir un $\sigma$ plus grand pour le calcul du laplacien, et l'image résultante est pratiquement identique à celle obtenue sans filtrage. Nous allons illustrer cela sur l'image \textit{globules}.\\\\
+
+\textbf{Image sans bruit :}
+
+\begin{center}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/globules.jpg}\\
+			\textit{origine}\\
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/ctrglobules-1_2.jpg}\\
+			\textit{$\sigma = 1.2$}\\
+		\end{center}
+	\end{minipage}
+\end{center}
+
+Sur cette image sans bruit il est possible d'arriver à une très bonne détection des contours.\\
+
+\textbf{Image bruitée (\textit{globulesbb26}) :}
+
+\begin{center}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/globules.jpg}\\
+			\textit{origine}\\
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/ctrglobulesbb26-2_2.jpg}\\
+			\textit{détection laplacien : $\sigma = 2.2$}\\
+		\end{center}
+	\end{minipage}
+\end{center}
+
+\begin{center}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/globulesbb26fg-2.jpg}\\
+			\textit{filtre gaussien : $\sigma = 2$}\\
+			\textit{}
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.49\linewidth}
+		\begin{center}
+			\includegraphics[width = 80mm]{./img/globulesbb26fg-2-ctr-1.jpg}\\
+			\textit{détection laplacien avec filtrage précédent : $\sigma = 1$}\\
+		\end{center}
+	\end{minipage}
+\end{center}
+
+Exemples obtenus sur les images de test :
+\begin{center}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/aquitain.jpg}
+			\textit{origine}\\
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/couchersoleil.jpg}
+			\textit{origine}\\
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/radio.jpg}
+			\textit{origine}\\
+		\end{center}
+	\end{minipage}
+\end{center}
+
+\begin{center}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+s			\includegraphics[width = 50mm]{./img/ctraquitain-1.jpg}
+			\textit{$\sigma = 1$}\\
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/ctrcouchersoleil-1_5.jpg}
+			\textit{$\sigma = 1.5$}\\
+		\end{center}
+	\end{minipage}
+	\begin{minipage}[c]{0.30\linewidth}
+		\begin{center}
+			\includegraphics[width = 50mm]{./img/ctrradio-1_5.jpg}
+			\textit{$\sigma = 1.5$}\\
+		\end{center}
+	\end{minipage}
+\end{center}
+
 
 \subsection{Comparaison}
 
