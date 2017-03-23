@@ -464,8 +464,8 @@ Sur la figure suivante on voit que la méthode est fonctionnelle.\\
 
 Ici, on a utilisé la seconde forme qui est une version moins contrastée de la première forme. En choisissant un seuil adapté on obtient bien les mêmes résultats pour les deux versions.
 On peux donc estimer que la variation de contraste n'est pas un problème pour la détection de contours.\\
-En revanche c'est désagréable d'avoir à ajuster le seuil on peux envisager de choisir une valeur qui s'adapterais au contraste de l'image.\\
-Pour la suite des tests on prendra la moyen de toute les valeur des pixel de l'image comme valeur seuil.\\
+En revanche c'est désagréable d'avoir à ajuster le seuil on peux envisager de choisir une valeure qui s'adapterais au contraste de l'image.\\
+Pour la suite des tests on prendra la moyenne de toute les valeures des pixels de l'image comme valeur seuil.\\
 Testons notre détécteur de contour sur les différentes formes de bruit :\\
 
 \noindent
@@ -492,11 +492,11 @@ Testons notre détécteur de contour sur les différentes formes de bruit :\\
 
 Avec les bruits poivre et sel on ne réussi pas à détecter de contour cohérent.\\
 Avec les bruits spéculum, les contours détécté foment de grosse tâche(il sera difficil de connaitre la position du contour).\\
-Avec les bruits gaussiens la difficulté de détection augmente graduelement avec la valeur de bruitage : on obtient un résultat intressant jusqu'a une valeur de 30.\\
+Avec les bruits gaussiens la difficulté de détection augmente graduelement avec la valeur de bruitage : on obtient un résultat intressant jusqu'a une valeure de 30.\\
 
 \subsubsection{On peux fixer le seuil relativement à l'image}
-A part certain cas extreme (voire ci-dessous) Choisire une valeur de seuil se rapportant à la moyenne
-et un bon compromis. Cela évite à l'utilisateur de rechercher un seuil valable.
+A part certain cas extreme (voire ci-dessous) Choisir une valeure de seuil se rapportant à la moyenne
+est un bon compromis. Cela évite à l'utilisateur de rechercher un seuil valable.
 Mais on peux toujours améliorer le résultat en ajustant le seuil plus finement.\\
 \noindent
 \begin{center}
@@ -515,8 +515,8 @@ Mais on peux toujours améliorer le résultat en ajustant le seuil plus finement
 \end{center}
 
 \subsubsection{Commencer par filtrer l'image}
-Notre détection de contour est fonctionel pour les images non bruité.
-Mais casiment jamais lorsqu'elle le sont. La solution est de pensé à réutiliser notre filtre gaussien.
+Notre détection de contour est fonctionel pour les images non-bruités.
+Mais casiment jamais lorsqu'elles le sont. La solution est de penser à réutiliser notre filtre gaussien.
 On l'utilisera avec une valeur de $\sigma=3$ qui à était établit comme la valeur nous rapprochant le plus de l'image initial(cf.partie 1).\\
 
 \noindent
@@ -552,7 +552,7 @@ On l'utilisera avec une valeur de $\sigma=3$ qui à était établit comme la val
 \end{minipage}
 \end{center}
 
-On dans l'exemple ci-dessus que le pré-filtrage améliore significativement la détéction de contour.\\
+On vois sur l'exemple ci-dessus que le pré-filtrage améliore significativement la détéction de contour.\\
 
 \subsubsection{Second ordre approché}
 Le probleme principal de cette première détection de contour, Que le filtrage préléminaire accentue, est la largeur des contours.
@@ -591,8 +591,8 @@ lagre bande de pixel, il est difficile de conaitre précisément où le position
 	\end{center}
 \end{minipage}
 
-Une idée pour corriger ce phénomen est de précisé la définition de nos contour en ajoutant qu'il est un maximum local du gradiant.
-Plus qu'une forte valeur on cherche les points où le gradiants atteint cette valeur maximum, en comparant avec c'est voisin. 
+Une idée pour corriger ce phénomen est de préciser la définition de nos contours en ajoutant qu'il est un maximum local du gradiant.
+Plus qu'une forte valeur on cherche les points où le gradiant atteint ces valeurs maximums, en comparant avec ses voisins. 
 Cette méthode s'apparente en fait a un calcule approximatif du laplacien, on tient compte du second ordre de dérivation.\\
 
 \noindent
@@ -628,11 +628,11 @@ Cette méthode s'apparente en fait a un calcule approximatif du laplacien, on ti
 \end{minipage}
 
 On peux voir sur les testes suivant que l'on a ainsi pu afiné les contours.
-En particulier les contour du tangram sont parfaitement détecter.
+En particulier les contours du tangram sont parfaitement détecté.
 En faite on pourrait obtenir de bon résultat avec les autres images mais il faudrais adapter le seuil.
 En effet cette methode introduit une nouvelle forme de seuil.
-Ce seuil apparait lors de la comparaison avec les voisins. Il restrint la détéction de contour au maximum de gradiant les plus "pointues".
-On appelera ce seuil t\\
+Ce seuil apparait lors de la comparaison avec les voisins. Il restreindra la détéction des contours aux maximumx de gradiant les plus "pointues".
+On appelera ce seuil : t\\
 
 \noindent
 \begin{center}
@@ -656,8 +656,8 @@ On appelera ce seuil t\\
 \end{minipage}
 \end{center}
 
-On vois sur le teste ci-dessus que avec un seuil petit (t=1) trop de "contour" sont détécter.
-Tandis que avec un seuil trop grand trop de contour ne sont plus détécter.\\
+On vois sur le teste ci-dessus que avec un seuil petit (t=1) trop de "contour" sont détécté.
+Tandis que avec un seuil trop grand trop de contour ne sont plus détécté.\\
 
 Cette nouvelle méthode répond bien à nos attente et nous fournis des contours précis.
 Cependant le moindre bruit rend cette nouvelle méthode inefficace.\\
@@ -702,7 +702,7 @@ $\longrightarrow$
 	\end{center}
 \end{minipage}
 
-En pensant à filtré l'image avant la détéction on obtient quand un résultat acceptable.
+En pensant à filtrer l'image avant la détéction, on obtient quand-même un résultat acceptable.
 
 \subsection{Opérateurs différentiels du deuxième ordre}
 Pour l'implémentation de la détection de contours par opérateurs du second ordre nous avons choisi d'implémenter le filtre passe-bande LoG par FFT. Nous n'avons pas utilisé un filtre idéalisé mais un filtre sous la forme $\mathcal{F}(\Delta G_{\sigma})$, où le paramètre $\sigma$ peut être choisi.\\
