@@ -515,6 +515,10 @@ Mais on peux toujours améliorer le résultat en ajustant le seuil plus finement
 \end{center}
 
 \subsubsection{Commencer par filtrer l'image}
+Notre détection de contour est fonctionel pour les images non bruité.
+Mais casiment jamais lorsqu'elle le sont. La solution est de pensé à réutiliser notre filtre gaussien.
+On l'utilisera avec une valeur de $\sigma=3$ qui à était établit comme la valeur nous rapprochant le plus de l'image initial(cf.partie 1).\\
+
 \noindent
 \begin{center}
 \begin{minipage}[c]{0.20\linewidth}
@@ -548,7 +552,7 @@ Mais on peux toujours améliorer le résultat en ajustant le seuil plus finement
 \end{minipage}
 \end{center}
 
-
+On dans l'exemple ci-dessus que le pré-filtrage améliore significativement la détéction de contour.\\
 
 \subsubsection{Second ordre approché}
 Le probleme principal de cette première détection de contour, Que le filtrage préléminaire accentue, est la largeur des contours.
@@ -587,6 +591,10 @@ lagre bande de pixel, il est difficile de conaitre précisément où le position
 	\end{center}
 \end{minipage}
 
+Une idée pour corriger ce phénomen est de précisé la définition de nos contour en ajoutant qu'il est un maximum local du gradiant.
+Plus qu'une forte valeur on cherche les points où le gradiants atteint cette valeur maximum, en comparant avec c'est voisin. 
+Cette méthode s'apparente en fait a un calcule approximatif du laplacien, on tient compte du second ordre de dérivation.\\
+
 \noindent
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
@@ -619,8 +627,13 @@ lagre bande de pixel, il est difficile de conaitre précisément où le position
 	\end{center}
 \end{minipage}
 
+On peux voir sur les testes suivant que l'on a ainsi pu afiné les contours.
+En particulier les contour du tangram sont parfaitement détecter.
+En faite on pourrait obtenir de bon résultat avec les autres images mais il faudrais adapter le seuil.
+En effet cette methode introduit une nouvelle forme de seuil.
+Ce seuil apparait lors de la comparaison avec les voisins. Il restrint la détéction de contour au maximum de gradiant les plus "pointues".
+On appelera ce seuil t\\
 
-cela introduit une nouvelle forme de seuil.\\
 \noindent
 \begin{center}
 \begin{minipage}[c]{0.20\linewidth}
@@ -643,6 +656,10 @@ cela introduit une nouvelle forme de seuil.\\
 \end{minipage}
 \end{center}
 
+On vois sur le teste ci-dessus que avec un seuil petit (t=1) trop de "contour" sont détécter.
+Tandis que avec un seuil trop grand trop de contour ne sont plus détécter.\\
+
+Cette nouvelle méthode répond bien à nos attente et nous fournis des contours précis.
 Cependant le moindre bruit rend cette nouvelle méthode inefficace.\\
 \noindent
 \begin{minipage}[c]{0.10\linewidth}
@@ -685,7 +702,7 @@ $\longrightarrow$
 	\end{center}
 \end{minipage}
 
-
+En pensant à filtré l'image avant la détéction on obtient quand un résultat acceptable.
 
 \subsection{Opérateurs différentiels du deuxième ordre}
 Pour l'implémentation de la détection de contours par opérateurs du second ordre nous avons choisi d'implémenter le filtre passe-bande LoG par FFT. Nous n'avons pas utilisé un filtre idéalisé mais un filtre sous la forme $\mathcal{F}(\Delta G_{\sigma})$, où le paramètre $\sigma$ peut être choisi.\\
