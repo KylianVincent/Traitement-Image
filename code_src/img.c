@@ -102,8 +102,8 @@ void filtrePasseBandeFrequentiel(double **imReal, double **imImag, int nl, int n
 void passageParZero(double **imSrc, double **imRes, int nl, int nc) {
     for(int u=0; u < nl-1; u++) {
         for(int v=0; v < nc-1; v++) {
-            if (imSrc[u][v] * imSrc[u+1][v] <= -1/2.0
-                || imSrc[u][v] * imSrc[u][v+1] <= -1/2.0) {
+            if ((imSrc[u][v] * imSrc[u+1][v] <= -0 && abs(imSrc[u][v] - imSrc[u+1][v]) >= 1)
+                || (imSrc[u][v] * imSrc[u][v+1] <= -0 && abs(imSrc[u][v] - imSrc[u][v+1]) >= 1)) {
                 imRes[u][v] = 0;
             } else {
                 imRes[u][v] = 254;
