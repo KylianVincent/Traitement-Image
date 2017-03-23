@@ -48,6 +48,6 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
         filtrageSpatial(im31, im41, sigma/10.0, nl, nc, w);
         clock_t finSpace=clock();
 
-        printf("%f\n", 1000*((double)(debutFreq-finFreq)-(debutSpace-finSpace))/CLOCKS_PER_SEC);
+        printf("%f\n", 100*((double)(debutFreq-finFreq)-(debutSpace-finSpace))/((double)(debutFreq-finFreq) *CLOCKS_PER_SEC));
     }
 }
