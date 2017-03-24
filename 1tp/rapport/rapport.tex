@@ -453,9 +453,9 @@ Sur la figure suivante on voit que la méthode est fonctionnelle.\\
 
 \noindent
 \begin{center}
-\begin{minipage}[c]{0.20\linewidth}
+\begin{minipage}[c]{0.50\linewidth}
 	\begin{center}
-		\includegraphics[width = 33mm]{./img/p2test_grad_mean_formes2.jpg}
+		\includegraphics[width = 80mm]{./img/p2test_grad_mean_formes2.jpg}
 		\textit{Détection de contours\\ forme 2}
 	\end{center}
 \end{minipage}
@@ -464,9 +464,11 @@ Sur la figure suivante on voit que la méthode est fonctionnelle.\\
 
 Ici, on a utilisé la seconde forme qui est une version moins contrastée de la première forme. En choisissant un seuil adapté on obtient bien les mêmes résultats pour les deux versions.
 On peux donc estimer que la variation de contraste n'est pas un problème pour la détection de contours.\\
-En revanche c'est désagréable d'avoir à ajuster le seuil on peux envisager de choisir une valeure qui s'adapterais au contraste de l'image.\\
-Pour la suite des tests on prendra la moyenne de toute les valeures des pixels de l'image comme valeur seuil.\\
-Testons notre détécteur de contour sur les différentes formes de bruit :\\
+
+En revanche, il est peu pratique d'avoir à ajuster le seuil et l'on peut envisager le choix d'une valeur qui s'adapterait au contraste de l'image.\\
+Pour la suite des tests, on a choisi la moyenne de toute les valeurs des pixels de l'image comme valeur seuil.\\
+
+Sur les images \textit{formesX.pgm} bruitées nous obtenons les résultats suivants :\\
 
 \noindent
 \begin{center}
@@ -479,25 +481,24 @@ Testons notre détécteur de contour sur les différentes formes de bruit :\\
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
 		\includegraphics[width = 33mm]{./img/p2test_grad_mean_formes1sp.jpg}
-		\textit{bruit Spéculum}
+		\textit{bruit Speckle}
 	\end{center}
 \end{minipage}
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
 		\includegraphics[width = 33mm]{./img/p2test_grad_mean_formes2bb10.jpg}
-		\textit{Détection de contour \\bruit blanc 10}
+		\textit{bruit blanc 10}
 	\end{center}
 \end{minipage}
 \end{center}
 
-Avec les bruits poivre et sel on ne réussi pas à détecter de contour cohérent.\\
-Avec les bruits spéculum, les contours détécté foment de grosse tâche(il sera difficil de connaitre la position du contour).\\
-Avec les bruits gaussiens la difficulté de détection augmente graduelement avec la valeur de bruitage : on obtient un résultat intressant jusqu'a une valeure de 30.\\
+Le bruits poivre et sel empêche la détection d'un contour cohérent.\\
+Avec un bruit Speckle, les contours détectés forment de grosses tâches (il sera difficile de connaître la position du contour).\\
+Avec les bruits gaussiens la difficulté de détection augmente graduellement avec la valeur de bruitage : le résultat obtenu est le contour additionné d'erreurs de détection jusqu'a aux images \textit{bb30}.\\
 
 \subsubsection{On peux fixer le seuil relativement à l'image}
-A part certain cas extreme (voire ci-dessous) Choisir une valeure de seuil se rapportant à la moyenne
-est un bon compromis. Cela évite à l'utilisateur de rechercher un seuil valable.
-Mais on peux toujours améliorer le résultat en ajustant le seuil plus finement.\\
+Dans la majorité des cas, choisir une valeur de seuil se rapportant à la moyenne est un bon compromis. Cela évite à l'utilisateur de rechercher un seuil valable. Ci dessous, on peut observer un cas où un seuil manuel permet une meilleure observation des contours qu'un seuil fixé à la moyenne.
+On peut cependant améliorer le résultat en ajustant le seuil plus finement.\\
 \noindent
 \begin{center}
 \begin{minipage}[c]{0.20\linewidth}
@@ -515,16 +516,15 @@ Mais on peux toujours améliorer le résultat en ajustant le seuil plus finement
 \end{center}
 
 \subsubsection{Commencer par filtrer l'image}
-Notre détection de contour est fonctionel pour les images non-bruités.
-Mais casiment jamais lorsqu'elles le sont. La solution est de penser à réutiliser notre filtre gaussien.
-On l'utilisera avec une valeur de $\sigma=3$ qui à était établit comme la valeur nous rapprochant le plus de l'image initial(cf.partie 1).\\
+Notre détection de contour est fonctionnelle pour les images non-bruités, cependant on a pu observer dans la section précédente que l'addition de bruit fausse totalement la détection de contours. La solution que nous avons appliquée est de réutiliser notre filtre gaussien pour dé-bruiter l'image avant l'étape de détection de contours.
+On l'utilise avec une valeur de $\sigma=3$ qui a été établie comme la valeur nous rapprochant le plus de l'image initial(cf.partie 1).\\
 
 \noindent
 \begin{center}
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
 		\includegraphics[width = 33mm]{./img/globulesbb26.jpg}
-		\textit{Image original : bruit gaussien 26}
+		\textit{Image originale : bruit gaussien 26}
 	\end{center}
 \end{minipage}
 \begin{minipage}[c]{0.20\linewidth}
@@ -541,29 +541,28 @@ On l'utilisera avec une valeur de $\sigma=3$ qui à était établit comme la val
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
 		\includegraphics[width = 33mm]{./img/globulesbb26_mean.jpg}
-		\textit{Detection de contour sur l'image original}
+		\textit{Détection de contours sur l'image originale}
 	\end{center}
 \end{minipage}
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
 		\includegraphics[width = 33mm]{./img/globulesbb26_filtrer3_mean.jpg}
-		\textit{Detection de contour sur l'image filtrée}
+		\textit{Détection de contours sur l'image filtrée}
 	\end{center}
 \end{minipage}
 \end{center}
 
-On vois sur l'exemple ci-dessus que le pré-filtrage améliore significativement la détéction de contour.\\
+On voit sur l'exemple ci-dessus que le pré-filtrage améliore significativement la détection de contours.\\
 
 \subsubsection{Second ordre approché}
-Le probleme principal de cette première détection de contour, Que le filtrage préléminaire accentue, est la largeur des contours.
-En effet, Détecter un contour n'est pas uniquement trouver sont existance. c'est aussi en connaitre la localisation. Or lorsque le contour et représenté par une
-lagre bande de pixel, il est difficile de conaitre précisément où le positionner.\\
+Le problème principal de cette première détection de contours (que le filtrage préliminaire accentue) est la largeur des contours.
+En effet, détecter un contour n'est pas réduit à trouver son existence. c'est aussi en connaître la localisation. Or lorsque le contour et représenté par une large bande de pixel, il est difficile de connaître précisément où le positionner.\\
 
 \noindent
 \begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
 		\includegraphics[width = 33mm]{./img/p2test_grad_mean_soleil.jpg}
-		\textit{coucher de Soleil}
+		\textit{coucher de oleil}
 	\end{center}
 \end{minipage}
 \begin{minipage}[c]{0.20\linewidth}
@@ -590,10 +589,11 @@ lagre bande de pixel, il est difficile de conaitre précisément où le position
 		\textit{globules}
 	\end{center}
 \end{minipage}
+\vspace{1em}
 
-Une idée pour corriger ce phénomen est de préciser la définition de nos contours en ajoutant qu'il est un maximum local du gradiant.
-Plus qu'une forte valeur on cherche les points où le gradiant atteint ces valeurs maximums, en comparant avec ses voisins. 
-Cette méthode s'apparente en fait a un calcule approximatif du laplacien, on tient compte du second ordre de dérivation.\\
+Une idée pour corriger ce phénomène est de préciser la définition de nos contours en ajoutant qu'ils sont des maximums locaux du gradient.
+Plus qu'une forte valeur, on cherche alors les points où le gradient atteint ces valeurs, en comparant avec ses voisins. 
+Cette méthode s'apparente en fait a un calcul approximatif du laplacien, on tient compte du second ordre de dérivation :\\
 
 \noindent
 \begin{minipage}[c]{0.20\linewidth}
@@ -627,12 +627,14 @@ Cette méthode s'apparente en fait a un calcule approximatif du laplacien, on ti
 	\end{center}
 \end{minipage}
 
-On peux voir sur les testes suivant que l'on a ainsi pu afiné les contours.
-En particulier les contours du tangram sont parfaitement détecté.
-En faite on pourrait obtenir de bon résultat avec les autres images mais il faudrais adapter le seuil.
-En effet cette methode introduit une nouvelle forme de seuil.
-Ce seuil apparait lors de la comparaison avec les voisins. Il restreindra la détéction des contours aux maximumx de gradiant les plus "pointues".
-On appelera ce seuil : t\\
+\vspace{1em}
+On peux voir sur les tests ci-dessus que l'on a ainsi pu affiner les contours.
+En particulier, les contours du tangram sont parfaitement détectés et sont beaucoup plus fins qu'avec la détection précédente.
+
+
+Les autres images montrent aussi ce phénomène mais un travail plus poussé sur l'adaptation des seuils permettrait d'obtenir de meilleurs résultats.
+En effet cette méthode introduit une nouvelle forme de seuil : ce seuil apparaît lors de la comparaison avec les voisins. Il restreindra la détection des contours aux maximums de gradient les plus "pointues".
+On appellera ce seuil : t\\
 
 \noindent
 \begin{center}
@@ -656,10 +658,9 @@ On appelera ce seuil : t\\
 \end{minipage}
 \end{center}
 
-On vois sur le teste ci-dessus que avec un seuil petit (t=1) trop de "contour" sont détécté.
-Tandis que avec un seuil trop grand trop de contour ne sont plus détécté.\\
+On voit sur le test ci-dessus qu'avec un seuil petit (t=1) trop de "contours" sont détectés, tandis qu'avec un seuil trop grand, trop de contours ne sont plus détectés.\\
 
-Cette nouvelle méthode répond bien à nos attente et nous fournis des contours précis.
+Cette nouvelle méthode répond bien à nos attente et nous fournit des contours précis.
 Cependant le moindre bruit rend cette nouvelle méthode inefficace.\\
 \noindent
 \begin{minipage}[c]{0.10\linewidth}
@@ -692,17 +693,19 @@ Cependant le moindre bruit rend cette nouvelle méthode inefficace.\\
 		\textit{t=55}
 	\end{center}
 \end{minipage}
-\hspace{2cm}
+\hspace{1.5cm}
 $\longrightarrow$
-\hspace{1cm}
-\begin{minipage}[c]{0.10\linewidth}
+\hspace{0.7cm}
+\begin{minipage}[c]{0.20\linewidth}
 	\begin{center}
-		\includegraphics[width = 33mm]{./img/globulesbb10_filtre2_fin1.jpg}
+		\includegraphics[width = 45mm]{./img/globulesbb10_filtre2_fin1.jpg}
 		\textit{filtre $\sigma=2$ et t=1}
 	\end{center}
 \end{minipage}
 
-En pensant à filtrer l'image avant la détéction, on obtient quand-même un résultat acceptable.
+
+\vspace{1em}
+En pensant à filtrer l'image avant la détection, on obtient tout de même un résultat acceptable : on distingue les contours recherchés mais du bruit reste visible.
 
 \subsection{Opérateurs différentiels du deuxième ordre}
 Pour l'implémentation de la détection de contours par opérateurs du second ordre nous avons choisi d'implémenter le filtre passe-bande LoG par FFT. Nous n'avons pas utilisé un filtre idéalisé mais un filtre sous la forme $\mathcal{F}(\Delta G_{\sigma})$, où le paramètre $\sigma$ peut être choisi.\\
