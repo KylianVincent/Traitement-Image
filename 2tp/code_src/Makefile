@@ -3,7 +3,7 @@ LDFLAGS=-lm
 
 all: filtreBilateral
 
-filtreGaussien: filtreBilateral.o pgm.o filtre.o 
+filtreBilateral: filtreBilateral.o pgm.o filters.o 
 	gcc $^ -o $@ $(LDFLAGS)
 
 %.o:%.c
