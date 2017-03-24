@@ -1,0 +1,217 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 							                   PREAMBULE        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4,12pt]{article}
+
+%--- Packages génériques ---%
+
+\usepackage[francais]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[babel=true]{csquotes}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+%--- Structure de la page ---%
+
+\usepackage{fancyheadings}
+
+\topmargin -1.5 cm
+\oddsidemargin -0.5 cm
+\evensidemargin -0.5 cm
+\textwidth 17 cm
+\setlength{\headwidth}{\textwidth}
+\textheight 24 cm
+\pagestyle{fancy}
+\lhead[\fancyplain{}{\thepage}]{\fancyplain{}{\sl ENSIMAG 2A}}
+\chead[\fancyplain{}{{\sl }}]{\fancyplain{}{{TP Traitement d'Image}}}
+\rhead[\fancyplain{}{}]{\fancyplain{}{Loiodice \& Vincent}}
+\lfoot{\fancyplain{}{}}
+\cfoot{\fancyplain{}{}}
+\cfoot{\thepage }
+\rfoot{\fancyplain{}{}}
+
+%--- Style de la zone de code ---%
+
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{listings}             
+\usepackage{textcomp}
+
+\lstset{upquote=true,
+        columns=flexible,
+        keepspaces=true,
+        breaklines,
+        breakindent=0pt,
+        basicstyle=\ttfamily,
+        commentstyle=\color[rgb]{0,0.6,0},
+        language=Scilab,
+        alsoletter=\),
+        }
+
+\lstset{classoffset=0,
+        keywordstyle=\color{violet!75},
+        deletekeywords={zeros,disp},
+        classoffset=1,
+        keywordstyle=\color{cyan},
+        morekeywords={zeros,disp},
+        }
+
+\lstset{extendedchars=true,
+        literate={0}{{\color{brown!75}0}}1 
+                 {1}{{\color{brown!75}1}}1 
+                 {2}{{\color{brown!75}2}}1 
+                 {3}{{\color{brown!75}3}}1 
+                 {4}{{\color{brown!75}4}}1 
+                 {5}{{\color{brown!75}5}}1 
+                 {6}{{\color{brown!75}6}}1 
+                 {7}{{\color{brown!75}7}}1 
+                 {8}{{\color{brown!75}8}}1 
+                 {9}{{\color{brown!75}9}}1 
+                 {(}{{\color{blue!50}(}}1 
+                 {)}{{\color{blue!50})}}1 
+                 {[}{{\color{blue!50}[}}1 
+                 {]}{{\color{blue!50}]}}1
+                 {-}{{\color{gray}-}}1
+                 {+}{{\color{gray}+}}1
+                 {=}{{\color{gray}=}}1
+                 {:}{{\color{orange!50!yellow}:}}1
+                 {é}{{\'e}}1 
+                 {è}{{\`e}}1 
+                 {à}{{\`a}}1 
+                 {ç}{{\c{c}}}1 
+                 {œ}{{\oe}}1 
+                 {ù}{{\`u}}1
+                 {É}{{\'E}}1 
+                 {È}{{\`E}}1 
+                 {À}{{\`A}}1 
+                 {Ç}{{\c{C}}}1 
+                 {Œ}{{\OE}}1 
+                 {Ê}{{\^E}}1
+                 {ê}{{\^e}}1 
+                 {î}{{\^i}}1 
+                 {ô}{{\^o}}1 
+                 {û}{{\^u}}1 
+        }
+
+%--- Raccourcis commande ---%
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\A}{\mathbf{A}}
+\newcommand{\B}{\mathbf{B}}
+\newcommand{\C}{\mathbf{C}}
+\newcommand{\D}{\mathbf{D}}
+\newcommand{\ub}{\mathbf{u}}
+
+%--- Mode correction et incréments automatiques ---%
+
+\usepackage{framed}
+\usepackage{ifthen}
+\usepackage{comment}
+\usepackage{graphicx}
+
+\newcounter{Nbquestion}
+
+\newcommand*\question{%
+\stepcounter{Nbquestion}%
+\textbf{Question \theNbquestion. }}
+
+\newboolean{enseignant}
+%\setboolean{enseignant}{true}
+\setboolean{enseignant}{false}
+
+\definecolor{shadecolor}{gray}{0.80}
+
+\ifthenelse{
+\boolean{enseignant}}{
+\newenvironment{correction}{\begin{shaded}}{\end{shaded}}
+}
+{
+\excludecomment{correction}
+}
+
+%--- Style de l'encadré des questions ---%
+
+\mdfsetup{leftmargin=12pt}
+\mdfsetup{skipabove=\topskip,skipbelow=\topskip}
+
+\tikzset{
+	warningsymbol/.style={
+	rectangle,draw=red,
+	fill=white,scale=1,
+	overlay}}
+\global\mdfdefinestyle{exampledefault}{
+	hidealllines=true,leftline=true,
+	innerrightmargin=0.0em,
+	innerleftmargin=0.3em,
+	leftmargin=0.0em,
+	linecolor=red,
+	backgroundcolor=orange!20,
+	middlelinewidth=4pt,
+	innertopmargin=\topskip,
+}
+
+\global\mdfdefinestyle{answer}{
+	hidealllines=true,leftline=true,
+	innerrightmargin=0.0em,
+	innerleftmargin=0.3em,
+	leftmargin=0.0em,
+	linecolor=green,
+	backgroundcolor=white,
+	middlelinewidth=4pt,
+	innertopmargin=\topskip,
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 							               EN-TETE        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{\textbf{TP1 Traitement d'Image\\Convolution : Lissage et détection de contours}}
+\author{
+\begin{tabular}{cc}
+	\textsc{Loiodice Thomas} & \textsc{Vincent Kylian} \\
+\end{tabular}}   
+\date{\small \today}
+
+\makeatletter
+	\def\thetitle{\@title}
+	\def\theauthor{\@author}
+	\def\thedate{\@date}
+\makeatother 
+
+\usepackage{etoolbox}
+\usepackage{titling}
+\setlength{\droptitle}{-7em}
+
+\setlength{\parindent}{1cm}
+
+\makeatletter
+% patch pour le bug concernant les parenthèses fermantes d'après http://tex.stackexchange.com/q/69472
+\patchcmd{\lsthk@SelectCharTable}{%
+  \lst@ifbreaklines\lst@Def{`)}{\lst@breakProcessOther)}\fi}{}{}{}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 							CORPS DU DOCUMENT          
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 						                  	PARTIE I         
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Partie I : Lissage linéaire}
+
+
+% Fin section 2 %
+\end{document}
+
+% Fin du document LaTeX
