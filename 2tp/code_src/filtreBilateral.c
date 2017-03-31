@@ -14,7 +14,7 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
 
   sigma = av[2];
 	/* transfomation en double -> calcul */ 
-	im4 = imuchar2double(im1,nl,nc);
+	im5 = imuchar2double(im1,nl,nc);
 	/* Calcul des contours */
 	bilateralFilter(im4,im5,nl,nc,1);
 
