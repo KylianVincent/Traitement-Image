@@ -1,5 +1,6 @@
 #include "filters.h"
 #include "math.h"
+#include "float.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,19 +18,25 @@
 /* ------ Filtre adaptatif récursif ------*/
 void adaptativeFilterInit(double** imSrc, double** imRes, double k, int nl, int nc) {
     int t = 0;
+    double oldDiff = DBL_MAX;
 
     //Terminaison condition
-    while (t < 30) {
+//    while (fabs(differenceBetweenImages(imSrc, imRes, nl, nc) - oldDiff) >= pow(10, -4)) {
+    while ((fabs(differenceBetweenImages(imSrc, imRes, nl, nc)) >= 2) && t<201) {
+        printf("Diff : %f\n", fabs(differenceBetweenImages(imSrc, imRes, nl, nc)));
+        oldDiff = differenceBetweenImages(imSrc, imRes, nl, nc);
         t++;
         if (t%2 == 1) {
-            adaptativeFilterRecursion(imSrc, imRes, k, nl, nc, t);
+            adaptativeFilterRecursion(imSrc, imRes, k, nl, nc);
         } else {
-            adaptativeFilterRecursion(imRes, imSrc, k, nl, nc, t);
+            adaptativeFilterRecursion(imRes, imSrc, k, nl, nc);
         }
     }
+        printf("Diff : %f\n", fabs(differenceBetweenImages(imSrc, imRes, nl, nc)));
+
 }
 
-void adaptativeFilterRecursion(double** imSrc, double** imRes, double k, int nl, int nc, int t) {
+void adaptativeFilterRecursion(double** imSrc, double** imRes, double k, int nl, int nc) {
     int um1, up1, vm1, vp1;
     double omega[nl][nc];
     double num, denom;
@@ -118,4 +125,15 @@ int prolongateByMirror(int u, int nl) {
         return -(u + 1);
     }
     return u;
+}
+
+double differenceBetweenImages(double** im1, double** im2, int nl, int nc) {
+    double diff = 0;
+    for (int u = 0; u < nl; u++) {
+        for (int v = 0; v < nc; v++) {
+            diff += pow(im1[u][v] - im2[u][v], 2.0);
+            //printf("%f\n", im1[u][v] - im2[u][v]);
+        }
+    }
+    return sqrt(diff);
 }
