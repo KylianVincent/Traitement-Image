@@ -104,6 +104,7 @@ void bilateralFilter(double** sortie, double** entree, int nl, int nc, int sigma
 			sortie[x][y] /= pixelNorme;
 		}
 	}
+}
 
 /* ------------- Filtre patch ------------*/
 
