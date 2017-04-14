@@ -13,6 +13,9 @@
 */
 
 /* ------------ Filtre médian ------------*/
+void MedianFilter(double** sortie, double** entree, int nl, int nc){
+
+}
 
 /* ------ Filtre adaptatif récursif ------*/
 void adaptativeFilterInit(double** imSrc, double** imRes, double k, int nl, int nc) {
@@ -69,35 +72,87 @@ void adaptativeFilterRecursion(double** imSrc, double** imRes, double k, int nl,
 
 /* ----------- Filtre bilatéral ----------*/
 
-void bilateralFilter(double** sortie, double** entree, int nl, int nc, int sigma1) { 
-	int x,y,i,j,ii,jj,k,l=(1+6*sigma1),pixelNorme;
-	double gaussienne[l*l+1];
+double median(int n, double x[]) {
+	double temp;
+	int i, j;
+	// the following two loops sort the array x in ascending order
+	for(i=0; i<n-1; i++) {
+		for(j=i+1; j<n; j++) {
+			if(x[j] < x[i]) {
+				// swap elements
+				temp = x[i];
+				x[i] = x[j];
+				x[j] = temp;
+			}
+		}
+	}
+
+	if(n%2==0) {
+		// if there is an even number of elements, return mean of the two elements in the middle
+		return((x[n/2] + x[n/2 - 1]) / 2.0);
+	} else {
+		// else return the element in the middle
+		return x[n/2];
+	}
+}
+
+void bilateralFilter(double** sortie, double** entree, int nl, int nc, double sigma1, double sigma2, bool med) { 
+	int x,y,i,j,ii,jj,k,l=(1+6*sigma1);
+	double gaussienne[l*l+1],pixelNorme;
     if (sortie==NULL) sortie=alloue_image_double(nl,nc);
 	//Pour chaque pixel du masque(sigma) -> précalcule de la gaussienne
-	for(i=-3*sigma1; i<3*sigma1; i++) {
-		for(j=-3*sigma1; j<3*sigma1; j++) {
+	for(i=-3*sigma1; i<=3*sigma1; i++) {
+		for(j=-3*sigma1; j<=3*sigma1; j++) {
 			ii = (i+3*sigma1);
 			jj = (j+3*sigma1);
 			k = ii+l*jj;
-			gaussienne[k] = exp((i*i+j*j)/(-2*sigma1*sigma1));
+			gaussienne[k] = exp((double)(i*i+j*j)/(-2*sigma1*sigma1));
+			printf("%f\t",gaussienne[k]);
 		}
+		printf("\n");
 	}
 	//Pour tout les pixels de l'image
-    //for(y=0; y<nl; y++) {
-      //  for(x=0; x<nc; x++) {
-    for(y=30; y<nl-30; y++) {
-        for(x=30; x<nc-30; x++) {
+	for(x=4*sigma1; x<nl-4*sigma1; x++) {
+		for(y=4*sigma1; y<nc-4*sigma1; y++) {
 			pixelNorme=0;
+			sortie[x][y] = 0;
 			//Pour chaque pixel du masque(sigma)
-			for(i=-3*sigma1; i<3*sigma1; i++) {
-				for(j=-3*sigma1; j<3*sigma1; j++) {
-					printf("i%d,j%d,x%d,y%d\nx+i%d\n",i,j,x,y,x+i);
+			for(i=-3*sigma1; i<=3*sigma1; i++) {
+				for(j=-3*sigma1; j<=3*sigma1; j++) {
+					//printf("i%d,j%d,x%d,y%d\nx+i%d\n",i,j,x,y,x+i);
 					ii = (i+3*sigma1);
 					jj = (j+3*sigma1);
 					k = ii+l*jj;
-					sortie[x][y] = gaussienne[k]*exp((i*i+j*j)/(-2*sigma1*sigma1));//TODO
-					pixelNorme += sortie[x][y];
-					sortie[x][y] *= entree[x+i][(y+j)];
+					double entreIJ = entree[x+i][(y+j)];
+					double entreXY = entree[x][(y)];
+					if(med) {
+						double medIJ[] = {	entree[x+i-1][y+j-1], 
+											entree[x+i-1][y+j], 
+											entree[x+i-1][y+j+1], 
+											entree[x+i][y+j-1], 
+											entree[x+i][y+j], 
+											entree[x+i][y+j+1], 
+											entree[x+i+1][y+j-1], 
+											entree[x+i+1][y+j], 
+											entree[x+i+1][y+j+1], }; 
+						entreIJ = median(9,medIJ);
+						double medXY[] = {	entree[x-1][y-1], 
+											entree[x-1][y], 
+											entree[x-1][y+1], 
+											entree[x][y-1], 
+											entree[x][y], 
+											entree[x][y+1], 
+											entree[x+1][y-1], 
+											entree[x+1][y], 
+											entree[x+1][y+1], }; 
+						entreXY = median(9,medXY);
+
+					}
+					double diff =entreIJ-entreXY;
+					double intesitDiff = (diff*diff)/(double)(-2*sigma2*sigma2);
+					double filtre = gaussienne[k]*exp(intesitDiff);
+					pixelNorme += filtre;
+					sortie[x][y] += entree[x+i][(y+j)]*filtre;
 				}
 			}
 			//Normalisation
@@ -105,6 +160,7 @@ void bilateralFilter(double** sortie, double** entree, int nl, int nc, int sigma
 		}
 	}
 }
+
 
 /* ------------- Filtre patch ------------*/
 
