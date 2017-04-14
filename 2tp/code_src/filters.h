@@ -15,6 +15,9 @@ void adaptativeFilterRecursion(double** imSrc, double** imRes, double k, int nl,
 void bilateralFilter(double** sortie, double** entree, int nl, int nc, int sigma1);
 
 /* ------ Filtre patch ------*/
+// t : Taille des régions
+// r : Taille des patchs
+void NIMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r, double sigma);
 
 /* ------ Extimation du bruit ------*/
 
