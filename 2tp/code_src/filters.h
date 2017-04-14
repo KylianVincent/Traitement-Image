@@ -11,14 +11,19 @@ void MedianFilter(double** sortie, double** entree, int nl, int nc);
 /* ------ Filtre adaptatif récursif ------*/
 void adaptativeFilterInit(double** imSrc, double** imRes, double k, int nl, int nc);
 
-void adaptativeFilterRecursion(double** imSrc, double** imRes, double k, int nl, int nc, int t);
+void adaptativeFilterRecursion(double** imSrc, double** imRes, double k, int nl, int nc);
 
 /* ------ Filtre bilatéral ------*/
 void bilateralFilter(double** sortie, double** entree, int nl, int nc, double sigma1, double sigma2, bool med);
 
 /* ------ Filtre patch ------*/
+// t : Taille des régions
+// r : Taille des patchs
+void NIMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r, double sigma);
 
 /* ------ Extimation du bruit ------*/
 
 /* ---------------- Utils ----------------*/
 int prolongateByMirror(int u, int nl);
+
+double differenceBetweenImages(double** im1, double** im2, int nl, int nc);

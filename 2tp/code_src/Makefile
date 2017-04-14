@@ -12,8 +12,11 @@ filtreAdaptatifRecursif: filtreAdaptatifRecursif.o pgm.o filters.o
 filtreMedian: filtreMedian.o pgm.o filters.o
 	gcc $^ -o $@ $(LDFLAGS)
 
+filtreNIMeans: filtreNIMeans.o pgm.o filters.o
+	gcc $^ -o $@ $(LDFLAGS)
+
 %.o:%.c
 	gcc $(CFLAGS) $<
 
 clean:
-	rm -f *.o filtreBilateral filtreAdaptatifRecursif filtreMedian
+	rm -f *.o filtreBilateral filtreAdaptatifRecursif filtreMedian filtreNIMeans

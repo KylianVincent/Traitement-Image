@@ -1,5 +1,6 @@
 #include "filters.h"
 #include "math.h"
+#include "float.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,19 +21,25 @@ void MedianFilter(double** sortie, double** entree, int nl, int nc){
 /* ------ Filtre adaptatif récursif ------*/
 void adaptativeFilterInit(double** imSrc, double** imRes, double k, int nl, int nc) {
     int t = 0;
+    double oldDiff = DBL_MAX;
 
     //Terminaison condition
-    while (t < 30) {
+//    while (fabs(differenceBetweenImages(imSrc, imRes, nl, nc) - oldDiff) >= pow(10, -4)) {
+    while ((fabs(differenceBetweenImages(imSrc, imRes, nl, nc)) >= 2) && t<201) {
+        printf("Diff : %f\n", fabs(differenceBetweenImages(imSrc, imRes, nl, nc)));
+        oldDiff = differenceBetweenImages(imSrc, imRes, nl, nc);
         t++;
         if (t%2 == 1) {
-            adaptativeFilterRecursion(imSrc, imRes, k, nl, nc, t);
+            adaptativeFilterRecursion(imSrc, imRes, k, nl, nc);
         } else {
-            adaptativeFilterRecursion(imRes, imSrc, k, nl, nc, t);
+            adaptativeFilterRecursion(imRes, imSrc, k, nl, nc);
         }
     }
+        printf("Diff : %f\n", fabs(differenceBetweenImages(imSrc, imRes, nl, nc)));
+
 }
 
-void adaptativeFilterRecursion(double** imSrc, double** imRes, double k, int nl, int nc, int t) {
+void adaptativeFilterRecursion(double** imSrc, double** imRes, double k, int nl, int nc) {
     int um1, up1, vm1, vp1;
     double omega[nl][nc];
     double num, denom;
@@ -46,9 +53,6 @@ void adaptativeFilterRecursion(double** imSrc, double** imRes, double k, int nl,
             up1 = prolongateByMirror(u+1, nl);
             vm1 = prolongateByMirror(v-1, nc);
             vp1 = prolongateByMirror(v+1, nc);
-
-            //printf("%d - %d - %d - %d\n", um1, up1, vm1, vp1);
-
             omega[u][v]=exp(-(pow(imSrc[up1][v] - imSrc[um1][v], 2.0) + pow(imSrc[u][vp1] - imSrc[u][vm1], 2.0))/(2*pow(k, 2.0)));
         }
     }
@@ -164,14 +168,58 @@ void bilateralFilter(double** sortie, double** entree, int nl, int nc, double si
 
 /* ------------- Filtre patch ------------*/
 
+void NIMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r, double sigma) {
+    double w;
+    double wPQ;
+    double dPQ;
+    printf("T : %i\nR: %i\n", t, r);
+    for (int u = 0; u < nl; u++) {
+        for (int v = 0; v < nc; v++) {
+            // Patch P centré en (u,v)
+            imRes[u][v] = 0;
+            for (int x = u-t; x < u+t; x++) {
+                for(int y = v-t; y < v+t; y++) {
+                    // Patch Q centré en (x,y)
+                    wPQ = 0;
+                    dPQ = 0;
+                    for (int i = -r; i < r; i++) {
+                        for (int j = -r; j < r; j++) {
+                            //printf(" Indices : (%i)%i - %i   ;    %i - %i\n", x+i, prolongateByMirror(x+i, nl), prolongateByMirror(y+j, nc), prolongateByMirror(u+i, nl), prolongateByMirror(v+j, nc));
+                            dPQ += pow(imSrc[prolongateByMirror(x+i, nl)][prolongateByMirror(y+j, nc)] - imSrc[prolongateByMirror(u+i, nl)][prolongateByMirror(v+j, nc)], 2);
+                            w = exp(-(dPQ/(2*pow(sigma, 2.0))));
+                            wPQ += w;
+                            //CALCULIMSORTIE
+                            imRes[u][v] += w * imSrc[x][y];
+                        }
+                    }
+                    //CALCULIMSORTIE
+                    imRes[u][v] /= wPQ;
+                    printf("%f\n", imRes[u][v]);
+                }
+            }
+        }
+    }
+}
+
 /* ---------- Extimation du bruit --------*/
 
 /* ---------------- Utils ----------------*/
 int prolongateByMirror(int u, int nl) {
     if (u >= nl) {
-        return nl - (nl - u + 1);
+        return nl - (u - nl + 1);
     } else if (u < 0) {
         return -(u + 1);
     }
     return u;
+}
+
+double differenceBetweenImages(double** im1, double** im2, int nl, int nc) {
+    double diff = 0;
+    for (int u = 0; u < nl; u++) {
+        for (int v = 0; v < nc; v++) {
+            diff += pow(im1[u][v] - im2[u][v], 2.0);
+            //printf("%f\n", im1[u][v] - im2[u][v]);
+        }
+    }
+    return sqrt(diff);
 }
