@@ -172,31 +172,31 @@ void NIMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r,
     double w;
     double wPQ;
     double dPQ;
-    printf("T : %i\nR: %i\n", t, r);
+//    printf("T : %i\nR: %i\n", t, r);
     for (int u = 0; u < nl; u++) {
         for (int v = 0; v < nc; v++) {
             // Patch P centré en (u,v)
             imRes[u][v] = 0;
+            wPQ = 0;
+            dPQ = 0;
             for (int x = u-t; x < u+t; x++) {
                 for(int y = v-t; y < v+t; y++) {
                     // Patch Q centré en (x,y)
-                    wPQ = 0;
-                    dPQ = 0;
                     for (int i = -r; i < r; i++) {
                         for (int j = -r; j < r; j++) {
                             //printf(" Indices : (%i)%i - %i   ;    %i - %i\n", x+i, prolongateByMirror(x+i, nl), prolongateByMirror(y+j, nc), prolongateByMirror(u+i, nl), prolongateByMirror(v+j, nc));
-                            dPQ += pow(imSrc[prolongateByMirror(x+i, nl)][prolongateByMirror(y+j, nc)] - imSrc[prolongateByMirror(u+i, nl)][prolongateByMirror(v+j, nc)], 2);
-                            w = exp(-(dPQ/(2*pow(sigma, 2.0))));
-                            wPQ += w;
-                            //CALCULIMSORTIE
-                            imRes[u][v] += w * imSrc[x][y];
+                            dPQ += pow(imSrc[prolongateByMirror(x+i, nl)][prolongateByMirror(y+j, nc)] - imSrc[prolongateByMirror(u+i, nl)][prolongateByMirror(v+j, nc)], 2) * 1/pow(2*r+1, 2);
                         }
                     }
+                    w = exp(-(dPQ/(2*pow(sigma, 2.0))));
+                    wPQ += w;
                     //CALCULIMSORTIE
-                    imRes[u][v] /= wPQ;
-                    printf("%f\n", imRes[u][v]);
+                    imRes[u][v] += w * imSrc[prolongateByMirror(x, nl)][prolongateByMirror(y, nc)];
                 }
             }
+            //CALCULIMSORTIE
+            imRes[u][v] /= wPQ;
+//            printf("%f\n", imRes[u][v]);
         }
     }
 }

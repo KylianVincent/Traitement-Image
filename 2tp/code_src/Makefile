@@ -1,7 +1,7 @@
 CFLAGS=-c -g -std=gnu99
 LDFLAGS=-lm
 
-all: filtreBilateral filtreAdaptatifRecursif filtreMedian
+all: filtreBilateral filtreAdaptatifRecursif filtreMedian filtreNIMeans
 
 filtreBilateral: filtreBilateral.o pgm.o filters.o
 	gcc $^ -o $@ $(LDFLAGS)
