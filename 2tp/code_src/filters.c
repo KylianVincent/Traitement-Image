@@ -178,12 +178,12 @@ void NIMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r,
             // Patch P centré en (u,v)
             imRes[u][v] = 0;
             wPQ = 0;
-            dPQ = 0;
             for (int x = u-t; x < u+t; x++) {
                 for(int y = v-t; y < v+t; y++) {
                     // Patch Q centré en (x,y)
-                    for (int i = -r; i < r; i++) {
-                        for (int j = -r; j < r; j++) {
+                    dPQ = 0;
+                    for (int i = -r; i <= r; i++) {
+                        for (int j = -r; j <= r; j++) {
                             //printf(" Indices : (%i)%i - %i   ;    %i - %i\n", x+i, prolongateByMirror(x+i, nl), prolongateByMirror(y+j, nc), prolongateByMirror(u+i, nl), prolongateByMirror(v+j, nc));
                             dPQ += pow(imSrc[prolongateByMirror(x+i, nl)][prolongateByMirror(y+j, nc)] - imSrc[prolongateByMirror(u+i, nl)][prolongateByMirror(v+j, nc)], 2) * 1/pow(2*r+1, 2);
                         }
@@ -202,6 +202,37 @@ void NIMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r,
 }
 
 /* ---------- Extimation du bruit --------*/
+double noiseEstimation(double ** im, int t, double p) {
+    double** tmp=alloue_image_double(nl,nc);
+    //Convolution par masque
+    for (int u = 0; u < nl; u++) {
+        for (int v = 0; v < nc; v++) {
+            tmp[u][v] = im[u][v] - im[prolongateByMirror(u-1, nl)][v]
+                        - im[prolongateByMirror(u+1, nl)][v]
+                        - im[u][prolongateByMirror(v-1, nc)]
+                        - im[u][prolongateByMirror(uv1, nc)];
+        }
+    }
+
+    //Histogramme des variances
+    int histVar[256*256];
+    int var;
+    int moy;
+    for (int u = 0; u < nl; u++) {
+        for (int v = 0; v < nc; v++) {
+            var = 0;
+            for (int x = u-t; x <= u+t; x++) {
+                for (int y = v-t; y <= v+t; y++) {
+                    var += pow(tmp[x][y], 2);
+                    moy += im[x][y];
+                }
+            }
+            moy /= (1/pow(2*t+1,2));
+            var = var*(1/pow(2*t+1,2)) - pow(moy, 2);
+            histVar[var]++;
+        }
+    }
+}
 
 /* ---------------- Utils ----------------*/
 int prolongateByMirror(int u, int nl) {
