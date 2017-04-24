@@ -34,16 +34,16 @@ void MedianFilter(double** sortie, double** entree, int nl, int nc, int n){
 	//chaque ligne
 	for(int i=n; i<nl-n; i++){
 		//Initialisation de l'histogramme
+		for(int k=0;k<256;k++)
+			hist[k]=0;
 		for(int k=0; k<l*l; k++){
 			int in = (int)entree[i-n+k/l][k%l];
-			hist[in]=hist[in]+1;
-			/**/		hist[12]=1;
-			if(i==25)
-				printf("%d\t%f\n",in,hist[in]);//*/
+			hist[in]++;
+			/*printf("%d\t%d\t%d\n",i-n+k/l,k%l,in);//*/
 		}
-		/**/		if(i==25)
+		/*/	//	if(i==25)
 			for(int k=0;k<256;k++)
-				printf("%d\t%f\n",k,hist[k]);//*/
+				printf("%d\t%d\n",k,hist[k]);//*/
 		sortie[i][n] = medianeFromHist(l*l, hist);
 		//chaque colone
 		for(int j=n+1; j<nc-n; j++){
@@ -51,9 +51,15 @@ void MedianFilter(double** sortie, double** entree, int nl, int nc, int n){
 			for(int k=0; k<l; k++){
 				hist[(int)entree[i-n+k][j-n-1]]--;
 				hist[(int)entree[i-n+k][j+n]]++;
+				//printf("%d\t%d\t\t%d\t%d\n",i-n+k,j-n-1,i-n+k,j+n);//*/
 			}
+			/*printf("\n");//*/
 			sortie[i][j] = medianeFromHist(l*l, hist);
-			//printf("%f\t",sortie[i][j]);
+				if(j==52 && i==52){
+			for(int k=0;k<256;k++)
+				printf("%d\t%d\n",k,hist[k]);//*/
+			printf("%f\t",sortie[i][j]);
+			}
 		}
 	}
 }
