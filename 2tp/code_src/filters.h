@@ -6,7 +6,7 @@
 */
 
 /* ------ Filtre médian ------*/
-void MedianFilter(double** sortie, double** entree, int nl, int nc);
+void MedianFilter(double** sortie, double** entree, int nl, int nc, int n);
 
 /* ------ Filtre adaptatif récursif ------*/
 void adaptativeFilterInit(double** imSrc, double** imRes, double k, int nl, int nc);
