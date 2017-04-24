@@ -17,7 +17,6 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
     /* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
     im1=lectureimagepgm(av[1],&nl,&nc);
     if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
-    /* Calcul de son inverse video */
     double**im3=imuchar2double(im1,nl,nc);
     im4=alloue_image_double(nl,nc);
 
