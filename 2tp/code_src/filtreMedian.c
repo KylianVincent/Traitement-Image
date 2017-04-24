@@ -11,8 +11,8 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
     unsigned char ** im1=NULL;
     double** im4;
 
-    if (ac < 3) {
-        printf("Usage : %s entree sortie\n", av[0]); exit(1);
+    if (ac < 4) {
+        printf("Usage : %s entree sortie size\n", av[0]); exit(1);
     }
     /* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
     im1=lectureimagepgm(av[1],&nl,&nc);
@@ -22,7 +22,7 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
     im4=alloue_image_double(nl,nc);
 
     //Filtrage
-    MedianFilter(im4, im3, nl, nc);
+    MedianFilter(im4, im3, nl, nc, atoi(av[3]));
 
     ecritureimagepgm(av[2],crop(imdouble2uchar(im4,nl,nc),0,0,nl,nc),nl,nc);
 }

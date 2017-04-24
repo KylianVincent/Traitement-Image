@@ -14,8 +14,48 @@
 */
 
 /* ------------ Filtre médian ------------*/
-void MedianFilter(double** sortie, double** entree, int nl, int nc){
 
+int medianeFromHist(int n,int hist[]){
+	int i,cummul = 0;
+	for(i=0; i<256 && cummul<(n/2);i++){
+		cummul+=hist[i];
+	}
+	return i;
+}
+
+void MedianFilter(double** sortie, double** entree, int nl, int nc, int n){
+	//n : demi-taille du filtre
+	//hist et la fréquence d'appaition de chaque valeur sur la zone filtré.
+	//au début on calcule tout lhistogramme pour la première fenètre.
+	//a chaque itération i,j on décale la fenetre, on retire les anciennes valeur et on ajoute les nouvelles.
+	//pour trouver la median m c'est le plus petit m tel que : sum(i=0..m of hist[i])>n
+	int l = 2*n+1;
+	int hist[256]={0};
+	//chaque ligne
+	for(int i=n; i<nl-n; i++){
+		//Initialisation de l'histogramme
+		for(int k=0; k<l*l; k++){
+			int in = (int)entree[i-n+k/l][k%l];
+			hist[in]=hist[in]+1;
+			/**/		hist[12]=1;
+			if(i==25)
+				printf("%d\t%f\n",in,hist[in]);//*/
+		}
+		/**/		if(i==25)
+			for(int k=0;k<256;k++)
+				printf("%d\t%f\n",k,hist[k]);//*/
+		sortie[i][n] = medianeFromHist(l*l, hist);
+		//chaque colone
+		for(int j=n+1; j<nc-n; j++){
+			//MAJ de l'histogramme
+			for(int k=0; k<l; k++){
+				hist[(int)entree[i-n+k][j-n-1]]--;
+				hist[(int)entree[i-n+k][j+n]]++;
+			}
+			sortie[i][j] = medianeFromHist(l*l, hist);
+			//printf("%f\t",sortie[i][j]);
+		}
+	}
 }
 
 /* ------ Filtre adaptatif récursif ------*/
