@@ -32,34 +32,34 @@ void MedianFilter(double** sortie, double** entree, int nl, int nc, int n){
 	int l = 2*n+1;
 	int hist[256]={0};
 	//chaque ligne
-	for(int i=n; i<nl-n; i++){
+	for(int i=0; i<nl; i++){
 		//Initialisation de l'histogramme
 		for(int k=0;k<256;k++)
 			hist[k]=0;
 		for(int k=0; k<l*l; k++){
-			int in = (int)entree[i-n+k/l][k%l];
+			int in = (int)entree[prolongateByMirror(i-n+k/l,nl)][prolongateByMirror(k%l,nc)];
 			hist[in]++;
 			/*printf("%d\t%d\t%d\n",i-n+k/l,k%l,in);//*/
 		}
 		/*/	//	if(i==25)
 			for(int k=0;k<256;k++)
 				printf("%d\t%d\n",k,hist[k]);//*/
-		sortie[i][n] = medianeFromHist(l*l, hist);
+		sortie[i][0] = medianeFromHist(l*l, hist);
 		//chaque colone
-		for(int j=n+1; j<nc-n; j++){
+		for(int j=1; j<nc; j++){
 			//MAJ de l'histogramme
 			for(int k=0; k<l; k++){
-				hist[(int)entree[i-n+k][j-n-1]]--;
-				hist[(int)entree[i-n+k][j+n]]++;
+				hist[(int)entree[prolongateByMirror(i-n+k,nl)][prolongateByMirror(j-n-1,nc)]]--;
+				hist[(int)entree[prolongateByMirror(i-n+k,nl)][prolongateByMirror(j+n,nc)]]++;
 				//printf("%d\t%d\t\t%d\t%d\n",i-n+k,j-n-1,i-n+k,j+n);//*/
 			}
 			/*printf("\n");//*/
 			sortie[i][j] = medianeFromHist(l*l, hist);
-				if(j==52 && i==52){
+			/*	if(j==52 && i==52){
 			for(int k=0;k<256;k++)
-				printf("%d\t%d\n",k,hist[k]);//*/
+				printf("%d\t%d\n",k,hist[k]);
 			printf("%f\t",sortie[i][j]);
-			}
+			}//*/
 		}
 	}
 }
@@ -157,13 +157,13 @@ void bilateralFilter(double** sortie, double** entree, int nl, int nc, double si
 			jj = (j+3*sigma1);
 			k = ii+l*jj;
 			gaussienne[k] = exp((double)(i*i+j*j)/(-2*sigma1*sigma1));
-			printf("%f\t",gaussienne[k]);
+			//printf("%f\t",gaussienne[k]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
 	//Pour tout les pixels de l'image
-	for(x=4*sigma1; x<nl-4*sigma1; x++) {
-		for(y=4*sigma1; y<nc-4*sigma1; y++) {
+	for(x=0; x<nl; x++) {
+		for(y=0; y<nc; y++) {
 			pixelNorme=0;
 			sortie[x][y] = 0;
 			//Pour chaque pixel du masque(sigma)
@@ -173,28 +173,28 @@ void bilateralFilter(double** sortie, double** entree, int nl, int nc, double si
 					ii = (i+3*sigma1);
 					jj = (j+3*sigma1);
 					k = ii+l*jj;
-					double entreIJ = entree[x+i][(y+j)];
-					double entreXY = entree[x][(y)];
+					double entreIJ = entree[prolongateByMirror(x+i,nl)][prolongateByMirror((y+j),nc)];
+					double entreXY = entree[prolongateByMirror(x,nl)][prolongateByMirror((y),nc)];
 					if(med) {
-						double medIJ[] = {	entree[x+i-1][y+j-1],
-											entree[x+i-1][y+j],
-											entree[x+i-1][y+j+1],
-											entree[x+i][y+j-1],
-											entree[x+i][y+j],
-											entree[x+i][y+j+1],
-											entree[x+i+1][y+j-1],
-											entree[x+i+1][y+j],
-											entree[x+i+1][y+j+1], };
+						double medIJ[] = {	entree[prolongateByMirror(x+i-1,nl)][prolongateByMirror(y+j-1,nc)],
+											entree[prolongateByMirror(x+i-1,nl)][prolongateByMirror(y+j,nc)],
+											entree[prolongateByMirror(x+i-1,nl)][prolongateByMirror(y+j+1,nc)],
+											entree[prolongateByMirror(x+i,nl)][prolongateByMirror(y+j-1,nc)],
+											entree[prolongateByMirror(x+i,nl)][prolongateByMirror(y+j,nc)],
+											entree[prolongateByMirror(x+i,nl)][prolongateByMirror(y+j+1,nc)],
+											entree[prolongateByMirror(x+i+1,nl)][prolongateByMirror(y+j-1,nc)],
+											entree[prolongateByMirror(x+i+1,nl)][prolongateByMirror(y+j,nc)],
+											entree[prolongateByMirror(x+i+1,nl)][prolongateByMirror(y+j+1,nc)], };
 						entreIJ = median(9,medIJ);
-						double medXY[] = {	entree[x-1][y-1],
-											entree[x-1][y],
-											entree[x-1][y+1],
-											entree[x][y-1],
-											entree[x][y],
-											entree[x][y+1],
-											entree[x+1][y-1],
-											entree[x+1][y],
-											entree[x+1][y+1], };
+						double medXY[] = {	entree[prolongateByMirror(x-1,nl)][prolongateByMirror(y-1,nc)],
+											entree[prolongateByMirror(x-1,nl)][prolongateByMirror(y,nc)],
+											entree[prolongateByMirror(x-1,nl)][prolongateByMirror(y+1,nc)],
+											entree[prolongateByMirror(x,nl)][prolongateByMirror(y-1,nc)],
+											entree[prolongateByMirror(x,nl)][prolongateByMirror(y,nc)],
+											entree[prolongateByMirror(x,nl)][prolongateByMirror(y+1,nc)],
+											entree[prolongateByMirror(x+1,nl)][prolongateByMirror(y-1,nc)],
+											entree[prolongateByMirror(x+1,nl)][prolongateByMirror(y,nc)],
+											entree[prolongateByMirror(x+1,nl)][prolongateByMirror(y+1,nc)], };
 						entreXY = median(9,medXY);
 
 					}
@@ -202,7 +202,7 @@ void bilateralFilter(double** sortie, double** entree, int nl, int nc, double si
 					double intesitDiff = (diff*diff)/(double)(-2*sigma2*sigma2);
 					double filtre = gaussienne[k]*exp(intesitDiff);
 					pixelNorme += filtre;
-					sortie[x][y] += entree[x+i][(y+j)]*filtre;
+					sortie[x][y] += entree[prolongateByMirror(x+i,nl)][prolongateByMirror((y+j),nc)]*filtre;
 				}
 			}
 			//Normalisation
