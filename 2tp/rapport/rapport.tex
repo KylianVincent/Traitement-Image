@@ -212,21 +212,38 @@
 \subsection{Filtre Médian}
 
 \subsection{Filtre Adaptatif Récursif}
+Dans le cas de ce filtre le critère d'arrêt est un élément très important. En effet ce dernier doit être bien défini et estimé pour permettre un filtrage complet sans effectuer d'étapes superflues. Pour cela, l'arrêt est défini sur l'écart entre deux traitements successifs d'images. L'écart seuil a été fixé empiriquement après essais sur les différentes images de test. Nous avons cependant remarqué que le choix du paramètre k de filtrage influe très fortement sur ce critère d'arrêt. En effet, si ce dernier est mal dimmensionné face au niveau de bruit de l'image alors un point fixe est très difficile à atteindre. Dans ce cas l'éxecution est stoppée à 200 itérations, valeur jugée suffisante au regard des essais effectués et de la description du filtre.
+
+Il n'est pas possible, pour ce filtre, de donner une valeur de K générique fonctionnant de manière optimale pour les différents types et intensités de bruit, K dépendant en effet de ce niveau de bruit. Les valeurs préconisées pour ce paramètre sont comprises entre  10 (faibles bruits) et 40 (forts bruits). Pour trouver ces valeurs nous avons étudié la convergence des images vers un point fixe en affichant la différence entre deux images successives.
 
 \subsection{Filtre Bilatéral}
 
 \subsection{Filtre NL-Means}
 
+\subsection{Estimation du bruit}
+
+
 \section{Partie II : Comparaison des filtres}
 \subsection{Comparaison quantitative}
+
+Les tests suivants ont été effectués sur plusieurs images, présentant un bruit ou une intensité de bruit différente. Dans chaque cas le test a été effectué dans le but d'obtenir un PSNR maximal. C'est pour ce PSNR obtenu que le temps CPU est mesuré.
 \begin{center}
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2bb10 & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means \\
+%%& & & k=12 & & \\
 \hline
-PSNR & & & &\\
+PSNR
+&
+& 40.85
+&
+& \\
 \hline
-Temps CPU & & & &\\
+Temps CPU
+& 
+& 1.002
+&
+&\\
 \hline
 \end{tabular} 
 \end{center}
@@ -236,10 +253,19 @@ Temps CPU & & & &\\
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2bb67 & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means\\
+%%& & & k=36 & & \\
 \hline
-PSNR & & & &\\
+PSNR
+&
+& 25.02
+&
+&\\
 \hline
-Temps CPU & & & &\\
+Temps CPU
+&
+& 3.345
+&
+&\\
 \hline
 \end{tabular} 
 \end{center}
@@ -250,9 +276,17 @@ Temps CPU & & & &\\
 \hline
 formes2pets5  & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means\\
 \hline
-PSNR & & & &\\
+PSNR
+&
+&
+&
+&\\
 \hline
-Temps CPU & & & &\\
+Temps CPU
+&
+&
+&
+&\\
 \hline
 \end{tabular} 
 \end{center}
@@ -263,9 +297,17 @@ Temps CPU & & & &\\
 \hline
 formes2sp5  & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means \\
 \hline
-PSNR & & & &\\
+PSNR
+&
+&
+&
+&\\
 \hline
-Temps CPU & & & &\\
+Temps CPU
+&
+&
+&
+&\\
 \hline
 \end{tabular} 
 \end{center}
