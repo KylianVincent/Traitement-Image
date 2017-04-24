@@ -100,7 +100,7 @@ double median(int n, double x[]) {
 	}
 }
 
-void bilateralFilter(double** sortie, double** entree, int nl, int nc, double sigma1, double sigma2, bool med) { 
+void bilateralFilter(double** sortie, double** entree, int nl, int nc, double sigma1, double sigma2, bool med) {
 	int x,y,i,j,ii,jj,k,l=(1+6*sigma1);
 	double gaussienne[l*l+1],pixelNorme;
     if (sortie==NULL) sortie=alloue_image_double(nl,nc);
@@ -130,25 +130,25 @@ void bilateralFilter(double** sortie, double** entree, int nl, int nc, double si
 					double entreIJ = entree[x+i][(y+j)];
 					double entreXY = entree[x][(y)];
 					if(med) {
-						double medIJ[] = {	entree[x+i-1][y+j-1], 
-											entree[x+i-1][y+j], 
-											entree[x+i-1][y+j+1], 
-											entree[x+i][y+j-1], 
-											entree[x+i][y+j], 
-											entree[x+i][y+j+1], 
-											entree[x+i+1][y+j-1], 
-											entree[x+i+1][y+j], 
-											entree[x+i+1][y+j+1], }; 
+						double medIJ[] = {	entree[x+i-1][y+j-1],
+											entree[x+i-1][y+j],
+											entree[x+i-1][y+j+1],
+											entree[x+i][y+j-1],
+											entree[x+i][y+j],
+											entree[x+i][y+j+1],
+											entree[x+i+1][y+j-1],
+											entree[x+i+1][y+j],
+											entree[x+i+1][y+j+1], };
 						entreIJ = median(9,medIJ);
-						double medXY[] = {	entree[x-1][y-1], 
-											entree[x-1][y], 
-											entree[x-1][y+1], 
-											entree[x][y-1], 
-											entree[x][y], 
-											entree[x][y+1], 
-											entree[x+1][y-1], 
-											entree[x+1][y], 
-											entree[x+1][y+1], }; 
+						double medXY[] = {	entree[x-1][y-1],
+											entree[x-1][y],
+											entree[x-1][y+1],
+											entree[x][y-1],
+											entree[x][y],
+											entree[x][y+1],
+											entree[x+1][y-1],
+											entree[x+1][y],
+											entree[x+1][y+1], };
 						entreXY = median(9,medXY);
 
 					}
@@ -202,7 +202,7 @@ void NIMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r,
 }
 
 /* ---------- Extimation du bruit --------*/
-double noiseEstimation(double ** im, int t, double p) {
+double noiseEstimation(double ** im, int nl, int nc, int t, double p) {
     double** tmp=alloue_image_double(nl,nc);
     //Convolution par masque
     for (int u = 0; u < nl; u++) {
@@ -210,28 +210,47 @@ double noiseEstimation(double ** im, int t, double p) {
             tmp[u][v] = im[u][v] - im[prolongateByMirror(u-1, nl)][v]
                         - im[prolongateByMirror(u+1, nl)][v]
                         - im[u][prolongateByMirror(v-1, nc)]
-                        - im[u][prolongateByMirror(uv1, nc)];
+                        - im[u][prolongateByMirror(v+1, nc)];
         }
     }
 
     //Histogramme des variances
-    int histVar[256*256];
+    int histVar[256*256]={0};
     int var;
     int moy;
     for (int u = 0; u < nl; u++) {
         for (int v = 0; v < nc; v++) {
             var = 0;
+            moy = 0;
             for (int x = u-t; x <= u+t; x++) {
                 for (int y = v-t; y <= v+t; y++) {
-                    var += pow(tmp[x][y], 2);
-                    moy += im[x][y];
+                    var += pow(tmp[prolongateByMirror(x, nl)][prolongateByMirror(y, nc)], 2);
+                    moy += tmp[prolongateByMirror(x, nl)][prolongateByMirror(y, nc)];
                 }
             }
-            moy /= (1/pow(2*t+1,2));
-            var = var*(1/pow(2*t+1,2)) - pow(moy, 2);
+            moy /= pow(2.0*t+1.0,2);
+            var = var*(1.0/pow(2.0*t+1.0,2)) - pow(moy, 2);
+            //printf("Var : %i\n", var);
             histVar[var]++;
         }
     }
+
+    // for (int i = 0; i < 256*256; i++) {
+    //     perror("%i : %i\n", i, histVar[i]);
+    // }
+
+    //Parcours de l'Histogramme
+    int parcourus = 0;
+    int aParcourir = pow(256, 2)*p;
+    // Initialisation à -1 pour attaquer le premier tour de boucle à 0
+    int varianceCour = -1;
+    while (parcourus < aParcourir) {
+        // printf("%i TO %i\n", parcourus, aParcourir);
+        varianceCour++;
+        parcourus += histVar[varianceCour];
+    }
+    // printf("%i TO %i\n", parcourus, aParcourir);
+    return 1.13*sqrt(varianceCour);
 }
 
 /* ---------------- Utils ----------------*/

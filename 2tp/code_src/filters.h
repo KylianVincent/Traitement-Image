@@ -22,7 +22,7 @@ void bilateralFilter(double** sortie, double** entree, int nl, int nc, double si
 void NIMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r, double sigma);
 
 /* ------ Extimation du bruit ------*/
-double noiseEstimation(double ** im, int t, double p);
+double noiseEstimation(double ** im, int nl, int nc, int t, double p);
 
 /* ---------------- Utils ----------------*/
 int prolongateByMirror(int u, int nl);
