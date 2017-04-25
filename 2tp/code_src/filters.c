@@ -72,8 +72,7 @@ void adaptativeFilterInit(double** imSrc, double** imRes, double k, int nl, int 
     //Terminaison condition
 //    while (fabs(differenceBetweenImages(imSrc, imRes, nl, nc) - oldDiff) >= pow(10, -4)) {
     while ((fabs(differenceBetweenImages(imSrc, imRes, nl, nc)) >= 2) && t<201) {
-        printf("Diff : %f\n", fabs(differenceBetweenImages(imSrc, imRes, nl, nc)));
-        oldDiff = differenceBetweenImages(imSrc, imRes, nl, nc);
+        //printf("Diff : %f\n", fabs(differenceBetweenImages(imSrc, imRes, nl, nc)));
         t++;
         if (t%2 == 1) {
             adaptativeFilterRecursion(imSrc, imRes, k, nl, nc);
@@ -81,7 +80,7 @@ void adaptativeFilterInit(double** imSrc, double** imRes, double k, int nl, int 
             adaptativeFilterRecursion(imRes, imSrc, k, nl, nc);
         }
     }
-        printf("Diff : %f\n", fabs(differenceBetweenImages(imSrc, imRes, nl, nc)));
+        //printf("Diff : %f\n", fabs(differenceBetweenImages(imSrc, imRes, nl, nc)));
 
 }
 
@@ -296,7 +295,7 @@ double noiseEstimation(double ** im, int nl, int nc, int t, double p) {
         parcourus += histVar[varianceCour];
     }
     // printf("%i TO %i\n", parcourus, aParcourir);
-    return 1.13*sqrt(varianceCour);
+    return sqrt(1.13*varianceCour);
 }
 
 /* ---------------- Utils ----------------*/
