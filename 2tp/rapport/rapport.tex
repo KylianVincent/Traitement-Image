@@ -214,6 +214,8 @@
 \subsection{Filtre Adaptatif Récursif}
 Dans le cas de ce filtre, le critère d'arrêt est un élément très important. En effet ce dernier doit être bien défini et estimé pour permettre un filtrage complet sans effectuer d'étapes superflues. Pour cela, l'arrêt est défini sur l'écart entre deux traitements successifs d'images. L'écart seuil a été fixé empiriquement après essais sur les différentes images de test. Nous avons cependant remarqué que le choix du paramètre k de filtrage influe très fortement sur ce critère d'arrêt. En effet, si ce dernier est mal dimmensionné face au niveau de bruit de l'image alors un point fixe est très difficile à atteindre. Dans ce cas l'éxecution est stoppée à 200 itérations, valeur jugée suffisante au regard des essais effectués et de la description du filtre.\\
 
+Dans le cas d'une valeur de $k$ trop importante, les contours se retrouvent découpés trop grossièrement : les bords des formes sont ainsi arrondis et les surfaces des formes internes se voient diminuer.\\
+
 Il n'est pas possible, pour ce filtre, de donner une valeur de K générique fonctionnant de manière optimale pour les différents types et intensités de bruit, K dépendant en effet de ce niveau de bruit. Les valeurs préconisées pour ce paramètre sont comprises entre  10 (faibles bruits) et 50 (forts bruits). Pour trouver ces valeurs nous avons étudié la convergence des images vers un point fixe en affichant la différence entre deux images successives.
 
 \subsection{Filtre Bilatéral}
@@ -225,6 +227,8 @@ Ces valeurs sont ainsi intéressantes pour la plupart des valeurs de bruit gauss
 
 Pour les autres types de bruit (speckle et poivre et sel), des tailles inférieures nous ont semblé donner de meilleurs résultats. En effet, ces bruits à forte variance décorellée de l'image XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.
 
+Pour le filtre NL-Means, la taille des patchs et régions ne doit pas être trop faible sans quoi des variations restent perceptibles dans les zones homogènes, il est alors nécessaire de réhausser la valeur du lissage $\sigma$ pour compenser cet effet :
+
 \subsection{Estimation du bruit}
 Dans le cas de l'implémentation du bruit, et pour se rapprocher des valeurs données en exemple dans le sujet (seuil de 60) nous avons jugé plus pertinent de renvoyer la valeur de l'écart type plutôt que la variance en elle-même ($\sigma = \sqrt{V}$).
 
@@ -234,7 +238,7 @@ Dans le cas de l'implémentation du bruit, et pour se rapprocher des valeurs don
 
 Les tests suivants ont été effectués sur plusieurs images, présentant un bruit ou une intensité de bruit différente. Les images des différents bruits ont été choisis de manière à avoir une variance uniforme entre les différents types (variance calculée identique pour les trois derniers bruits), permettant ainsi une bonne comparaison.\\
 
-Dans chaque cas le test a été effectué dans le but d'obtenir un PSNR maximal (choix des paramètres en conséquence). C'est pour ce PSNR obtenu que le temps CPU est mesuré. Les temps ainsi mesurés ont été moyennés sur 5 réalisations. Les valeurs renseignées pour le filreNL-Means sont dans l'ordre : $r$, $t$, $\sigma$\\
+Dans chaque cas le test a été effectué dans le but d'obtenir un PSNR maximal (choix des paramètres en conséquence). C'est pour ce PSNR obtenu que le temps CPU est mesuré. Les temps ainsi mesurés ont été moyennés sur 5 réalisations. Les valeurs renseignées pour le filreNL-Means sont dans l'ordre : $t$ (région), $r$ (patchs), $\sigma$\\
 
 Image \textit{formes2bb10.pgm}, présentant un faible bruit gaussien (Estimation de bruit : 32.76).
 
@@ -242,13 +246,13 @@ Image \textit{formes2bb10.pgm}, présentant un faible bruit gaussien (Estimation
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2bb10 & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means \\
-& & k=12 & & 5,10,10\\
+& & k=12 & & 10,5,10\\
 \hline
 Estimation du bruit
 &
+& 22.82
 &
-&
-&\\
+& 22.87\\
 \hline
 PSNR
 &
@@ -260,7 +264,7 @@ Temps CPU
 & 
 & 1.002s
 &
-& 1m39.6s\\
+& 1m20.23s\\
 \hline
 \end{tabular} 
 \end{center}
@@ -273,13 +277,13 @@ Image \textit{formes2bb67.pgm}, présentant un fort bruit gaussien (Estimation d
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2bb67 & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means\\
-& & k=36 & & ,,49\\
+& & k=36 & & 10,5,49\\
 \hline
 Estimation du bruit
 &
+& 24.98
 &
-&
-&\\
+& 26.13\\
 \hline
 PSNR
 &
@@ -291,24 +295,24 @@ Temps CPU
 &
 & 3.345s
 &
-& \\
+& 1m19.92s\\
 \hline
 \end{tabular} 
 \end{center}
 
 \vspace{2em}
 
-Image \textit{formes2pets.pgm}, présentant un fort bruit poivre et sel (Estimation de bruit : 272.14).
+Image \textit{formes2pets5.pgm}, présentant un fort bruit poivre et sel (Estimation de bruit : 272.14).
 
 \begin{center}
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2pets5  & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means\\
-& & k=32 & & \\
+& & k=32 & & 10,5,39\\
 \hline
 Estimation du bruit
 &
-&
+& 24.59
 &
 &\\
 \hline
@@ -322,7 +326,7 @@ Temps CPU
 &
 & 3.321s
 &
-&\\
+& 1m31.58s\\
 \hline
 \end{tabular} 
 \end{center}
@@ -339,7 +343,7 @@ formes2sp5  & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-
 \hline
 Estimation du bruit
 &
-&
+& 23.86
 &
 &\\
 \hline
@@ -353,14 +357,21 @@ Temps CPU
 &
 & 3.346s
 &
-& 1m42.76s\\
+& \\
 \hline
 \end{tabular} 
 \end{center}
 
+On remarque alors que le filtre NL-Means, bien qu'offrant des résultats très satisfaisants est bien plus long que les autres filtres. Il est possible de diminuer son temps d'éxecution en prenant des régions plus petites (par ex. $t=4$, $r=2$) au prix d'une augmentation du facteur de lissage $\sigma$ et d'un moins bon filtrage (l'ordre de temps est alors inférieur à 10s et se rapproche de ceux obtenus pour les autres filtres).
+
+
 \vspace{2em}
 
 \subsection{Comparaison qualitative}
+
+Nous avions vu lors du TP précédent que le PSNR permet d'avoir une idée générale mais qu'une estimation visuelle permet de trouver un meilleur compromis entre le bruit persistant et la conservation des contours de l'image. La comparaison visuelle qualitative apparaît donc indispensable.\\
+
+
 
 
 % Fin section 2 %
