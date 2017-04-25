@@ -172,7 +172,7 @@
 % 							               EN-TETE        
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{\textbf{TP1 Traitement d'Image\\Convolution : Lissage et détection de contours}}
+\title{\textbf{TP2 Traitement d'Image\\Filtrage non linéaire}}
 \author{
 \begin{tabular}{cc}
 	\textsc{Loiodice Thomas} & \textsc{Vincent Kylian} \\
@@ -212,105 +212,153 @@
 \subsection{Filtre Médian}
 
 \subsection{Filtre Adaptatif Récursif}
-Dans le cas de ce filtre le critère d'arrêt est un élément très important. En effet ce dernier doit être bien défini et estimé pour permettre un filtrage complet sans effectuer d'étapes superflues. Pour cela, l'arrêt est défini sur l'écart entre deux traitements successifs d'images. L'écart seuil a été fixé empiriquement après essais sur les différentes images de test. Nous avons cependant remarqué que le choix du paramètre k de filtrage influe très fortement sur ce critère d'arrêt. En effet, si ce dernier est mal dimmensionné face au niveau de bruit de l'image alors un point fixe est très difficile à atteindre. Dans ce cas l'éxecution est stoppée à 200 itérations, valeur jugée suffisante au regard des essais effectués et de la description du filtre.
+Dans le cas de ce filtre, le critère d'arrêt est un élément très important. En effet ce dernier doit être bien défini et estimé pour permettre un filtrage complet sans effectuer d'étapes superflues. Pour cela, l'arrêt est défini sur l'écart entre deux traitements successifs d'images. L'écart seuil a été fixé empiriquement après essais sur les différentes images de test. Nous avons cependant remarqué que le choix du paramètre k de filtrage influe très fortement sur ce critère d'arrêt. En effet, si ce dernier est mal dimmensionné face au niveau de bruit de l'image alors un point fixe est très difficile à atteindre. Dans ce cas l'éxecution est stoppée à 200 itérations, valeur jugée suffisante au regard des essais effectués et de la description du filtre.\\
 
-Il n'est pas possible, pour ce filtre, de donner une valeur de K générique fonctionnant de manière optimale pour les différents types et intensités de bruit, K dépendant en effet de ce niveau de bruit. Les valeurs préconisées pour ce paramètre sont comprises entre  10 (faibles bruits) et 40 (forts bruits). Pour trouver ces valeurs nous avons étudié la convergence des images vers un point fixe en affichant la différence entre deux images successives.
+Il n'est pas possible, pour ce filtre, de donner une valeur de K générique fonctionnant de manière optimale pour les différents types et intensités de bruit, K dépendant en effet de ce niveau de bruit. Les valeurs préconisées pour ce paramètre sont comprises entre  10 (faibles bruits) et 50 (forts bruits). Pour trouver ces valeurs nous avons étudié la convergence des images vers un point fixe en affichant la différence entre deux images successives.
 
 \subsection{Filtre Bilatéral}
 
 \subsection{Filtre NL-Means}
+Concernant le filtrage NL-Means, l'estimation du meilleur choix de taille de patchs et de région est difficile. En effet le filtre est très coûteux en calculs et rend les tests de différentes valeurs très longs, augmentant avec la taille de ces derniers. Nous avons effectué quelques essais qui nous ont permis d'aboutir à un compromis qui nous a semblé satisfaisant en prenant un taille de patchs \textit{r = 5} et une taille de région \textit{t = 10}. En effet, sur l'exemple de l'image \textit{formes2bb10.pgm} l'écart (de PSNR et visuel) est très faible avec une taille de patchs \textit{r = 5} et une taille de région \textit{t = 15} (\textit{PSNR = 40.01} contre $40.02$ avec les tailles précédentes). Cependant le temps de calcul est, lui, fortement augmenté : respectivement \textit{3m44.028s} (pour \textit{r=5, t=10}) et \textit{1m39.620s} (\textit{r=7, t=15}).\\
+
+Ces valeurs sont ainsi intéressantes pour la plupart des valeurs de bruit gaussien, mais il est quelquefois nécessaire de les augmenter (au prix d'un plus grand nombre de calculs) si le niveau de bruit est trop fort. Cela perme d' améliorer la robustesse de la méthode : les patchs comparés sont alors plus grands, réduisant l'incidence du bruit sur les formes recherchées.\\
+
+Pour les autres types de bruit (speckle et poivre et sel), des tailles inférieures nous ont semblé donner de meilleurs résultats. En effet, ces bruits à forte variance décorellée de l'image XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.
 
 \subsection{Estimation du bruit}
+Dans le cas de l'implémentation du bruit, et pour se rapprocher des valeurs données en exemple dans le sujet (seuil de 60) nous avons jugé plus pertinent de renvoyer la valeur de l'écart type plutôt que la variance en elle-même ($\sigma = \sqrt{V}$).
 
 
 \section{Partie II : Comparaison des filtres}
 \subsection{Comparaison quantitative}
 
-Les tests suivants ont été effectués sur plusieurs images, présentant un bruit ou une intensité de bruit différente. Dans chaque cas le test a été effectué dans le but d'obtenir un PSNR maximal. C'est pour ce PSNR obtenu que le temps CPU est mesuré.
+Les tests suivants ont été effectués sur plusieurs images, présentant un bruit ou une intensité de bruit différente. Les images des différents bruits ont été choisis de manière à avoir une variance uniforme entre les différents types (variance calculée identique pour les trois derniers bruits), permettant ainsi une bonne comparaison.\\
+
+Dans chaque cas le test a été effectué dans le but d'obtenir un PSNR maximal (choix des paramètres en conséquence). C'est pour ce PSNR obtenu que le temps CPU est mesuré. Les temps ainsi mesurés ont été moyennés sur 5 réalisations. Les valeurs renseignées pour le filreNL-Means sont dans l'ordre : $r$, $t$, $\sigma$\\
+
+Image \textit{formes2bb10.pgm}, présentant un faible bruit gaussien (Estimation de bruit : 32.76).
+
 \begin{center}
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2bb10 & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means \\
-%%& & & k=12 & & \\
+& & k=12 & & 5,10,10\\
+\hline
+Estimation du bruit
+&
+&
+&
+&\\
 \hline
 PSNR
 &
 & 40.85
 &
-& \\
+& 40.02\\
 \hline
 Temps CPU
 & 
-& 1.002
+& 1.002s
 &
-&\\
+& 1m39.6s\\
 \hline
 \end{tabular} 
 \end{center}
 
+\vspace{2em}
+
+Image \textit{formes2bb67.pgm}, présentant un fort bruit gaussien (Estimation de bruit : 272.14).
 
 \begin{center}
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2bb67 & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means\\
-%%& & & k=36 & & \\
+& & k=36 & & ,,49\\
+\hline
+Estimation du bruit
+&
+&
+&
+&\\
 \hline
 PSNR
 &
 & 25.02
 &
-&\\
+& 27.17\\
 \hline
 Temps CPU
 &
-& 3.345
+& 3.345s
 &
-&\\
+& \\
 \hline
 \end{tabular} 
 \end{center}
 
+\vspace{2em}
+
+Image \textit{formes2pets.pgm}, présentant un fort bruit poivre et sel (Estimation de bruit : 272.14).
 
 \begin{center}
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2pets5  & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means\\
+& & k=32 & & \\
 \hline
-PSNR
+Estimation du bruit
 &
 &
 &
 &\\
 \hline
+PSNR
+&
+& 25.23
+&
+&\\
+\hline
 Temps CPU
 &
-&
+& 3.321s
 &
 &\\
 \hline
 \end{tabular} 
 \end{center}
 
+\vspace{2em}
+
+Image \textit{formes2sp5.pgm}, présentant un fort bruit speckle (Estimation de bruit : 272.14).
 
 \begin{center}
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2sp5  & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means \\
+& & k=48 & & \\
+\hline
+Estimation du bruit
+&
+&
+&
+&\\
 \hline
 PSNR
 &
-&
+& 23.80
 &
 &\\
 \hline
 Temps CPU
 &
+& 3.346s
 &
-&
-&\\
+& 1m42.76s\\
 \hline
 \end{tabular} 
 \end{center}
+
+\vspace{2em}
 
 \subsection{Comparaison qualitative}
 
