@@ -67,7 +67,7 @@ void MedianFilter(double** sortie, double** entree, int nl, int nc, int n){
 /* ------ Filtre adaptatif récursif ------*/
 void adaptativeFilterInit(double** imSrc, double** imRes, double k, int nl, int nc) {
     int t = 0;
-    double oldDiff = DBL_MAX;
+    //double oldDiff = DBL_MAX;
 
     //Terminaison condition
 //    while (fabs(differenceBetweenImages(imSrc, imRes, nl, nc) - oldDiff) >= pow(10, -4)) {

@@ -209,6 +209,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Partie I : Implémentation et estimation des paramètres}
+
+Tout d'abord, nous avons décidé de travailler sur des images prologées par miroir, afin de pouvoir avoir en sortie une image de même taille qu'en entrée. Cela permet d'avoir un filtre pleinement fonctionnel. Pour cela nous avons créé une fonction dédiée permettant de ramener les indices en dehors de la taille de l'image aux valeurs identiques en miroir.
+
 \subsection{Filtre Médian}
 
 \subsection{Filtre Adaptatif Récursif}
@@ -290,7 +293,7 @@ Image \textit{formes2bb67.pgm}, présentant un fort bruit gaussien (Estimation d
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2bb67 & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means\\
-& & k=36 & & 10,5,49\\
+& & k=36 & & 11,6,49\\
 \hline
 Estimation du bruit
 &
@@ -388,35 +391,58 @@ Nous avons choisi l'image \textit{globulesbb25.pgm} afin d'avoir une image prés
 
 \noindent
 \begin{center}
-	\begin{minipage}[c]{0.24\linewidth}
+	\begin{minipage}[c]{0.45\linewidth}
 		\begin{center}
-			\includegraphics[width = 40mm]{./img/globMedian.jpg}
-			\textit{Filtre Médian}
-			\textit{$t = , r= , \sigma=$}\
+			\includegraphics[width = 70mm]{./img/globb25Med4.jpg}
+			\textit{Filtre Médian}\\
+			\textit{$N=4$}\\
+                        \hspace{2em}
 		\end{center}
 	\end{minipage}
-	\begin{minipage}[c]{0.24\linewidth}
+	\begin{minipage}[c]{0.45\linewidth}
 		\begin{center}
-			\includegraphics[width = 40mm]{./img/globAdapt.jpg}
-			\textit{Filtre Adaptatif}\
-			\textit{$K = $}\
+			\includegraphics[width = 70mm]{./img/globAdapt.jpg}
+			\textit{Filtre Adaptatif}\\
+			\textit{$K = 35$}\\
+                        \hspace{2em}
 		\end{center}
 	\end{minipage}
-	\begin{minipage}[c]{0.24\linewidth}
+	\begin{minipage}[c]{0.45\linewidth}
 		\begin{center}
-			\includegraphics[width = 40mm]{./img/globBilat.jpg}
-			\textit{Filtre Bilatéral}
-			\textit{$t = , r= , \sigma=$}\
+			\includegraphics[width = 70mm]{./img/globb25Bilateral_5_20.jpg}
+			\textit{Filtre Bilatéral}\\
+			\textit{$\sigma_1 =5 , \sigma_2=20$}\\
 		\end{center}
 	\end{minipage}
-	\begin{minipage}[c]{0.24\linewidth}
+	\begin{minipage}[c]{0.45\linewidth}
 		\begin{center}
-			\includegraphics[width = 40mm]{./img/globNLMeans.jpg}
-			\textit{Filtre NL-Means}
-			\textit{$t = , r= , \sigma=$}\
+			\includegraphics[width = 70mm]{./img/globNLMeans.jpg}
+			\textit{Filtre NL-Means}\\
+			\textit{$t = 6, r= 3, \sigma=15$}\\
 		\end{center}
 	\end{minipage}\\
 \end{center}
+
+
+On remarque tout d'abord que le filtre adaptatif récursif ne donne pas d'aussi bons résultats que les autres filtres. En effet 
+
+La condition d'arrêt du nombre d'itérations semble être en cause, en effet en bridant l'algorithme à 7 itérations on obtient un résultat bien plus satisfaisant :\\
+
+\noindent
+\begin{center}
+	\begin{minipage}[c]{0.45\linewidth}
+		\begin{center}
+			\includegraphics[width = 70mm]{./img/globAdaptMoinsInt.jpg}
+			\textit{Filtre Adaptatif}
+			\textit{$K = 35, 7$ itérations}\
+		\end{center}
+	\end{minipage}
+\end{center}
+
+Nous n'avons cependant pas réussi à affiner le calcul d'un critère d'arrêt qui permette de bons résultats que ce soit sur les images de globules et les images \textit{formesAxxyy} qui, elles, nécessitent comme expliqué dans le sujet un plus grand nombre d'itérations (100 à 200 généralement).
+
+
+Concernant les autres filtres, le filtre NL-Means semble donner les meilleurs résultats. Les autres filtres donnent cependant un résultat assez proche et pour un coût de calcul bien inférieur. C'est notamment le cas pour les filtres "Adaptatif Récursif" et "Bilinéaire" qui permettent un très bon compromis entre une suppression du bruit et une conservation des contours. Le filtre médian semble rester en retrait au niveau de la conservation de ces contours.
 
 % Fin section 2 %
 \end{document}
