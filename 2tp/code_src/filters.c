@@ -286,7 +286,7 @@ double noiseEstimation(double ** im, int nl, int nc, int t, double p) {
 
     //Parcours de l'Histogramme
     int parcourus = 0;
-    int aParcourir = pow(256, 2)*p;
+    int aParcourir = pow(256, 2)*p/100;
     // Initialisation à -1 pour attaquer le premier tour de boucle à 0
     int varianceCour = -1;
     while (parcourus < aParcourir) {
