@@ -12,7 +12,7 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
     double** im4;
 
     if (ac < 5) {
-        printf("Usage : %s entree sortie sigma\n", av[0]); exit(1);
+        printf("Usage : %s entree sortie sigma1 sigma2\n", av[0]); exit(1);
     }
     /* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
     im1=lectureimagepgm(av[1],&nl,&nc);
