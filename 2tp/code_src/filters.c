@@ -213,7 +213,7 @@ void bilateralFilter(double** sortie, double** entree, int nl, int nc, double si
 
 /* ------------- Filtre patch ------------*/
 
-void NIMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r, double sigma) {
+void NLMeansFilter(double** imSrc, double** imRes, int nl, int nc, int t, int r, double sigma) {
     double w;
     double wPQ;
     double dPQ;

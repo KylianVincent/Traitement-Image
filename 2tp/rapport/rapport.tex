@@ -210,75 +210,79 @@
 
 \section{Partie I : Implémentation et estimation des paramètres}
 
-Tout d'abord, nous avons décidé de travailler sur des images prologées par miroir, afin de pouvoir avoir en sortie une image de même taille qu'en entrée. Cela permet d'avoir un filtre pleinement fonctionnel. Pour cela nous avons créé une fonction dédiée permettant de ramener les indices en dehors de la taille de l'image aux valeurs identiques en miroir.
+Tout d'abord, nous avons décidé de travailler sur des images prolongées par miroir, afin de pouvoir avoir en sortie une image de même taille qu'en entrée. Cela permet d'avoir un filtre pleinement fonctionnel. Pour cela nous avons créé une fonction dédiée permettant de ramener les indices en dehors de la taille de l'image aux valeurs identiques en miroir.
 
 \subsection{Filtre Médian}
 
-Le Filtre median donne généralement un bon résultat pour un n
+Le filtre médian donne généralement un bon résultat pour un $n$
 compris entre 2 et 5. Il a l'avantage d'être rapide $ \approx 0.1 s $
-pour un filtre de taille raisonnable et sont temps s'accroit linéairement 
+pour un filtre de taille raisonnable et son temps s'accroît linéairement 
 avec la taille de l'image.
-En s'appuyant sur la métrique de la PSNR la meilleurs demi-taille du filtre est généralement 3 
-ce qui confirme notre observation qualitative. 
-Le défaut principal de ce filtre est qu'il as tendance a lisser les surfaces. 
+En s'appuyant sur la métrique du PSNR, la meilleure demi-taille du filtre est généralement 3,
+ce que confirme notre observation qualitative. 
+Le défaut principal de ce filtre est qu'il a tendance a lisser les surfaces. 
 En effet plus la taille du filtre est importante plus le résultat est déformé.
-C'est donc inutile de prendre un filtre median trop grand.
+Il est donc inutile de prendre un filtre médian de taille trop grande.
 
 \subsection{Filtre Adaptatif Récursif}
-Dans le cas de ce filtre, le critère d'arrêt est un élément très important. En effet ce dernier doit être bien défini et estimé pour permettre un filtrage complet sans effectuer d'étapes superflues. Pour cela, l'arrêt est défini sur l'écart (norme 2 sur la différence) entre deux traitements successifs d'images. L'écart seuil a été fixé empiriquement après essais sur les différentes images de test. Nous avons cependant remarqué que le choix du paramètre k de filtrage influe très fortement sur ce critère d'arrêt. En effet, si ce dernier est mal dimmensionné face au niveau de bruit de l'image alors un point fixe est très difficile à atteindre. Dans ce cas l'éxecution est stoppée à 200 itérations, valeur jugée suffisante au regard des essais effectués et de la description du filtre.\\
+Dans le cas de ce filtre, le critère d'arrêt est un élément très important. En effet ce dernier doit être bien défini et estimé pour permettre un filtrage complet sans effectuer d'étapes superflues. Pour cela, l'arrêt est défini sur l'écart (norme 2 sur la différence) entre deux traitements successifs d'images. L'écart seuil a été fixé empiriquement après essais sur les différentes images de test. Nous avons cependant remarqué que le choix du paramètre k de filtrage influe très fortement sur ce critère d'arrêt. En effet, si ce dernier est mal dimensionné face au niveau de bruit de l'image alors un point fixe est très difficile à atteindre. Dans ce cas l'exécution est stoppée à 200 itérations, valeur jugée suffisante au regard des essais effectués et de la description du filtre.\\
 
 Dans le cas d'une valeur de $k$ trop importante, les contours se retrouvent découpés trop grossièrement : les bords des formes sont ainsi arrondis et les surfaces des formes internes se voient diminuer.\\
 
 Il n'est pas possible, pour ce filtre, de donner une valeur de K générique fonctionnant de manière optimale pour les différents types et intensités de bruit, K dépendant en effet de ce niveau de bruit. Les valeurs préconisées pour ce paramètre sont comprises entre  10 (faibles bruits) et 50 (forts bruits). Pour trouver ces valeurs nous avons étudié la convergence des images vers un point fixe en affichant la différence entre deux images successives.
 \subsection{Filtre Bilatéral}
 
-Le Filtrage par filtre bilatéral dépend de deux paramètres $\sigma_1$ et $\sigma_2$. 
-Le concepte est d'applique à l'image une gaussienne en distance et en intensité puis normaliser le filtrage.
-La gaussienne en distance réalise un lissage ( niveau de détaille). 
-Celle en intensité permet de ne lisser que par zone de couleur similaire et donc de conserver les contoures.
-donc prendre $\sigma_2$ grand donne beaucoup d'importance au contour, 
+Le filtrage par filtre bilatéral dépend de deux paramètres $\sigma_1$ et $\sigma_2$. 
+Le concept est d'appliquer à l'image une gaussienne en distance et en intensité puis de normaliser le filtrage.
+La gaussienne en distance réalise un lissage (niveau de détails). 
+Celle en intensité permet de ne lisser que par zones de couleurs similaires et donc de conserver les contours.
+Ainsi, prendre $\sigma_2$ grand donne beaucoup d'importance aux contours, 
 on conserve un grand niveau de détail, 
-tantdis ce qu'à l'inverse on floute l'image.
-le temps de calcule du filtre ne dépend pas de $\sigma_2$ 
-il est donc possible (et important) de choisir une valeur adaptée au niveau de détail que l'on souhaite conservé.
+l'inverse conduit cependant à flouter l'image.\\
+
+Le temps de calcul du filtre ne dépend pas de $\sigma_2$,
+il est donc possible (et important) de choisir une valeur adaptée au niveau de détail que l'on souhaite conserver.
 $\sigma_1$ , lui, détermine la taille du filtre. 
-Il s'accroit avec une répercussion quadratique sur le temps de calcule.
+Son accroissement a une répercussion quadratique sur le temps de calcul.
 Il sera alors préférable qu'il ne soit pas trop grand. 
-Pour $\sigma_2 = 3 $ on obtient un résultat acceptable pour un temps d'execution ne dépassant 10 seconde.
-Pour $\sigma_1 = 5 $ on atteint déjà la minute de calcule pour une légère amélioration.
-\\
+Pour $\sigma_1 = 3 $ on obtient un résultat acceptable pour un temps d'exécution ne dépassant 10 seconde.
+Pour $\sigma_1 = 5 $ on atteint déjà la minute de calcul pour une légère amélioration.\\
+
+
 \noindent
 \begin{minipage}[c]{0.33\linewidth}
 	\begin{center}
 		\includegraphics[width = 40mm]{./img/formOrig.jpg}\\
-		\textit{$t=4, r=2, \sigma=10$}\\
+		\textit{Image originale}\\
 	\end{center}
 \end{minipage}
 \begin{minipage}[c]{0.33\linewidth}
 	\begin{center}
 		\includegraphics[width = 40mm]{./img/formbb25Bil3_20.jpg}\\
-		\textit{$t=10, r=5, \sigma=10$}\\
+		\textit{$\sigma_1=3, \sigma_2=20$}\\
 	\end{center}
 \end{minipage}
 \begin{minipage}[c]{0.33\linewidth}
 	\begin{center}
 		\includegraphics[width = 40mm]{./img/formbb25Bil5_20.jpg}\\
-		\textit{$t=10, r=5, \sigma=10$}\\
+		\textit{$\sigma_1=5, \sigma_2=20$}\\
 	\end{center}
 \end{minipage}\\
-\\
-Concernant la PSNR elle s'accroit de plus en plus faiblement avec $\sigma_1$ (j'ai testé jusqu'à $\sigma_1 = 17$ ,pour un $\sigma_2 \approx 10$ )
-Alors ,la PSNR tend vers 40.\\
-Pour la suite on considérera  $\sigma_1 = 5$ ,pour un $\sigma_2 \approx 10$ comme valeur acceptable pour un filtre bilateral.
+
+\hspace{2em}
+
+Concernant le PSNR, il s'accroît de plus en plus faiblement avec $\sigma_1$ (nous avons testé jusqu'à $\sigma_1 = 17$ , pour un $\sigma_2 \approx 10$ )
+Le PSNR tend alors vers 40.\\
+Pour la suite on considérera  $\sigma_1 = 5$ ,pour un $\sigma_2 \approx 10$ comme valeur acceptable pour un filtre bilateral, permettant ainsi un bon compromis entre temps de calcul et résultats obtenus.
 
 \subsection{Filtre NL-Means}
 Concernant le filtrage NL-Means, l'estimation du meilleur choix de taille de patchs et de région est difficile. En effet le filtre est très coûteux en calculs et rend les tests de différentes valeurs très longs, augmentant avec la taille de ces derniers. Nous avons effectué quelques essais qui nous ont permis d'aboutir à un compromis qui nous a semblé satisfaisant en prenant un taille de patchs \textit{r = 5} et une taille de région \textit{t = 10}. En effet, sur l'exemple de l'image \textit{formes2bb10.pgm} l'écart (de PSNR et visuel) est très faible avec une taille de patchs \textit{r = 5} et une taille de région \textit{t = 15} (\textit{PSNR = 40.01} contre $40.02$ avec les tailles précédentes). Cependant le temps de calcul est, lui, fortement augmenté : respectivement \textit{3m44.028s} (pour \textit{r=5, t=10}) et \textit{1m39.620s} (\textit{r=7, t=15}).\\
 
-Ces valeurs sont ainsi intéressantes pour la plupart des valeurs de bruit gaussien, mais il est quelquefois nécessaire de les augmenter (au prix d'un plus grand nombre de calculs) si le niveau de bruit est trop fort. Cela perme d' améliorer la robustesse de la méthode : les patchs comparés sont alors plus grands, réduisant l'incidence du bruit sur les formes recherchées.\\
+Ces valeurs sont ainsi intéressantes pour la plupart des valeurs de bruit gaussien, mais il est quelquefois nécessaire de les augmenter (au prix d'un plus grand nombre de calculs) si le niveau de bruit est trop fort. Cela permet d' améliorer la robustesse de la méthode : les patchs comparés sont alors plus grands, réduisant l'incidence du bruit sur les formes recherchées.\\
 
-Pour les autres types de bruit (speckle et poivre et sel), des tailles inférieures pour le patch et la région nous ont semblé donner de meilleurs résultats. En effet, ces bruits présentent une forte variance décorellée de l'image et rendent la recherche sur un grand voisinage trop aléatoire du fait de la forte différence possible entre deux pixels successifs.\\
+Pour les autres types de bruit (speckle et poivre et sel), des tailles inférieures pour le patch et la région nous ont semblé donner de meilleurs résultats. En effet, ces bruits présentent une forte variance décorrélée de l'image et rendent la recherche sur un grand voisinage trop aléatoire du fait de la forte différence possible entre deux pixels successifs.\\
 
-Cependant ces tailles ne doivent pas être trop faibles, sans quoi des variations restent perceptibles dans les zones homogènes, il est alors nécessaire de réhausser la valeur du lissage $\sigma$ pour compenser cet effet :\\
+Cependant ces tailles ne doivent pas être trop faibles, sans quoi des variations restent perceptibles dans les zones homogènes, il est alors nécessaire de rehausser la valeur du lissage $\sigma$ pour compenser cet effet :\\
 
 \noindent
 \begin{minipage}[c]{0.50\linewidth}
@@ -303,7 +307,7 @@ Dans le cas de l'implémentation du bruit, et pour se rapprocher des valeurs don
 
 Les tests suivants ont été effectués sur plusieurs images, présentant un bruit ou une intensité de bruit différente. Les images des différents bruits ont été choisis de manière à avoir une variance uniforme entre les différents types (variance calculée identique pour les trois derniers bruits), permettant ainsi une bonne comparaison.\\
 
-Dans chaque cas le test a été effectué dans le but d'obtenir un PSNR maximal (choix des paramètres en conséquence). C'est pour ce PSNR obtenu que le temps CPU est mesuré. Les temps ainsi mesurés ont été moyennés sur 5 réalisations. Les valeurs renseignées pour le filreNL-Means sont dans l'ordre : $t$ (région), $r$ (patchs), $\sigma$.\\
+Dans chaque cas le test a été effectué dans le but d'obtenir un PSNR maximal (choix des paramètres en conséquence). C'est pour ce PSNR obtenu que le temps CPU est mesuré. Les temps ainsi mesurés ont été moyennés sur 5 réalisations. Les valeurs renseignées pour le filre NL-Means sont dans l'ordre : $t$ (région), $r$ (patchs), $\sigma$.\\
 
 Image \textit{formes2bb10.pgm}, présentant un faible bruit gaussien (Estimation de bruit : 22.27).
 
@@ -311,7 +315,7 @@ Image \textit{formes2bb10.pgm}, présentant un faible bruit gaussien (Estimation
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2bb10 & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means \\
-& n=3 & k=12 & $\sigma_1 = 5 \sigma_2 = 17$ & 10,5,10\\
+& n=3 & k=12 & $\sigma_1 = 5$ $\sigma_2 = 17$ & 10,5,10\\
 \hline
 Estimation du bruit
 & 4.99
@@ -342,7 +346,7 @@ Image \textit{formes2bb67.pgm}, présentant un fort bruit gaussien (Estimation d
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2bb67 & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means\\
-& n=8 & k=36 & $\sigma_1 = 5 \sigma_2 = 108$ & 11,6,49\\
+& n=8 & k=36 & $\sigma_1 = 5$ $\sigma_2 = 108$ & 11,6,49\\
 \hline
 Estimation du bruit
 & 10.63
@@ -373,10 +377,10 @@ Image \textit{formes2pets5.pgm}, présentant un fort bruit poivre et sel (Estima
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2pets5  & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means\\
-& n=2 & k=32 & $\sigma_1 = 5 \sigma_2 = 15$ & 6,4,39\\
+& n=2 & k=32 & $\sigma_1 = 5$ $\sigma_2 = 15$ & 6,4,39\\
 \hline
 Estimation du bruit
-& 0.00
+& 1.56
 & 4.38
 & 8.10
 & 16.87\\
@@ -404,7 +408,7 @@ Image \textit{formes2sp5.pgm}, présentant un fort bruit speckle (Estimation de 
 \begin{tabular}{|l||c|c|c|c|}
 \hline
 formes2sp5  & Filtre Médian & Filtre Adaptatif & Filtre Bilatéral & Filtre NL-Means \\
-& n=9 & k=48 & $\sigma_1 = 5 \sigma_2 = $ &6,5,91\\
+& n=9 & k=48 & $\sigma_1 = 5$ $\sigma_2 = 170$ &6,5,91\\
 \hline
 Estimation du bruit
 & 10.58
@@ -427,7 +431,13 @@ Temps CPU
 \end{tabular} 
 \end{center}
 
-On remarque alors que le filtre NL-Means, bien qu'offrant des résultats très satisfaisants est bien plus long que les autres filtres. Il est possible de diminuer son temps d'éxecution en prenant des régions plus petites (par ex. $t=4$, $r=2$) au prix d'une augmentation du facteur de lissage $\sigma$ et d'un moins bon filtrage (l'ordre de temps est alors inférieur à 10s et se rapproche de ceux obtenus pour les autres filtres).
+On remarque tout que le filtre NL-Means, bien qu'offrant des résultats très satisfaisants est bien plus long que les autres filtres. Il est possible de diminuer son temps d'exécution en prenant des régions plus petites (par ex. $t=4$, $r=2$) au prix d'une augmentation du facteur de lissage $\sigma$ et d'un moins bon filtrage (l'ordre de temps est alors inférieur à 10s et se rapproche de ceux obtenus pour les autres filtres).\\
+
+Le filtre Bilatéral semble être intéressant, présentant un coût modéré pour un résultat surpassant les autres filtres en se basant sur le PSNR. C'est cependant le filtre adaptatif récursif qui semble donner les meilleurs résultats au regard de l'estimation du bruit.\\
+
+Ainsi il semblerait que parmi ces deux filtres, le filtre adaptatif récursif parvienne à un meilleur lissage du bruit que le bilatéral mais en étant moins fidèle à l'image d'origine que ce dernier. Les estimateurs numériques ne donnant que peu d'appréciation sur ces hypothèses nous les vérifierons lors de l'étude qualitative.\\
+
+Enfin, le filtre médian, bien qu'étant le plus rapide, est très irrégulier. En effet sur certaines images ou sur le bruit "poivre et sel" il semble donner de meilleurs résultats que les autres filtres mais cela ne se vérifie pas pour d'autre types d'images comme on peut le voir avec l'image de faible bruit gaussien \textit{formes2bb10.pgm}.
 
 
 \vspace{2em}
@@ -484,7 +494,7 @@ Nous avons choisi l'image \textit{globulesbb25.pgm} afin d'avoir une image prés
 \end{center}
 
 
-On remarque tout d'abord que le filtre adaptatif récursif ne donne pas d'aussi bons résultats que les autres filtres. En effet 
+On remarque tout d'abord que le filtre adaptatif récursif ne donne pas d'aussi bons résultats que les autres filtres, contrairement à ce qu'on a vu avec l'étude numérique précédente. En effet on n'obtient qu'un résultat fortement flouté avec seulement le détachement des formes les plus sombres.
 
 La condition d'arrêt du nombre d'itérations semble être en cause, en effet en bridant l'algorithme à 7 itérations on obtient un résultat bien plus satisfaisant :\\
 
@@ -499,10 +509,13 @@ La condition d'arrêt du nombre d'itérations semble être en cause, en effet en
 	\end{minipage}
 \end{center}
 
-Nous n'avons cependant pas réussi à affiner le calcul d'un critère d'arrêt qui permette de bons résultats que ce soit sur les images de globules et les images \textit{formesAxxyy} qui, elles, nécessitent comme expliqué dans le sujet un plus grand nombre d'itérations (100 à 200 généralement).
+Nous n'avons cependant pas réussi à affiner le calcul d'un critère d'arrêt qui permette de bons résultats que ce soit sur les images de globules et les images \textit{formesAxxyy} qui, elles, nécessitent comme expliqué dans le sujet un plus grand nombre d'itérations (100 à 200 généralement).\\
 
 
-Concernant les autres filtres, le filtre NL-Means semble donner les meilleurs résultats. Les autres filtres donnent cependant un résultat assez proche et pour un coût de calcul bien inférieur. C'est notamment le cas pour les filtres "Adaptatif Récursif" et "Bilinéaire" qui permettent un très bon compromis entre une suppression du bruit et une conservation des contours. Le filtre médian semble rester en retrait à cause de la déformation de des contours qu'il entraine.
+Concernant les autres filtres, le filtre NL-Means semble donner les meilleurs résultats. Les autres filtres donnent cependant un résultat assez proche et pour un coût de calcul bien inférieur. C'est notamment le cas pour les filtres "Adaptatif Récursif" et "Bilinéaire" qui permettent un très bon compromis entre une suppression du bruit et une conservation des contours. L'hypothèse vue en section précédente pour ces deux filtres semble se vérifier sur ces images (adaptatif offrant un résultat plus lisse mais possiblement moins fidèle aux colorations d'origine).\\
+
+
+Le filtre médian semble rester en retrait à cause de la déformation des contours qu'il entraîne.
 
 % Fin section 2 %
 \end{document}

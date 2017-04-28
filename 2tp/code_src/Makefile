@@ -1,7 +1,7 @@
 CFLAGS=-c -g -std=gnu99
 LDFLAGS=-lm
 
-all: filtreBilateral filtreAdaptatifRecursif filtreMedian filtreNIMeans estimationBruit testPsnr
+all: filtreBilateral filtreAdaptatifRecursif filtreMedian filtreNLMeans estimationBruit testPsnr
 
 filtreBilateral: filtreBilateral.o pgm.o filters.o
 	gcc $^ -o $@ $(LDFLAGS)
@@ -12,7 +12,7 @@ filtreAdaptatifRecursif: filtreAdaptatifRecursif.o pgm.o filters.o
 filtreMedian: filtreMedian.o pgm.o filters.o
 	gcc $^ -o $@ $(LDFLAGS)
 
-filtreNIMeans: filtreNIMeans.o pgm.o filters.o
+filtreNLMeans: filtreNLMeans.o pgm.o filters.o
 	gcc $^ -o $@ $(LDFLAGS)
 
 estimationBruit: estimationBruit.o pgm.o filters.o
@@ -25,4 +25,4 @@ testPsnr: testPsnr.o pgm.o
 	gcc $(CFLAGS) $<
 
 clean:
-	rm -f *.o filtreBilateral filtreAdaptatifRecursif filtreMedian filtreNIMeans estimationBruit testPsnr
+	rm -f *.o filtreBilateral filtreAdaptatifRecursif filtreMedian filtreNLMeans estimationBruit testPsnr

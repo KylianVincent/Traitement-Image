@@ -21,7 +21,7 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
     im4=alloue_image_double(nl,nc);
 
     //Filtrage
-    NIMeansFilter(im3, im4, nl, nc, atoi(av[3]), atoi(av[4]), atof(av[5]));
+    NLMeansFilter(im3, im4, nl, nc, atoi(av[3]), atoi(av[4]), atof(av[5]));
 
     ecritureimagepgm(av[2],crop(imdouble2uchar(im4,nl,nc),0,0,nl,nc),nl,nc);
 }
